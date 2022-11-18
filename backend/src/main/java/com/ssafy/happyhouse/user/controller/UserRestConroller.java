@@ -101,6 +101,7 @@ public class UserRestConroller {
 				response.addCookie(RTCookie);
 				
 				resultMap.put("message", SUCCESS);
+				resultMap.put("id", user.getId());
 				status = HttpStatus.ACCEPTED;
 			} else {
 				resultMap.put("message", FAIL);
