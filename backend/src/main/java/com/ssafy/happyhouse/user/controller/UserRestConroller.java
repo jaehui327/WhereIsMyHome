@@ -1,5 +1,6 @@
 package com.ssafy.happyhouse.user.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,12 +9,12 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.tomcat.util.json.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,11 +24,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.ssafy.happyhouse.jwt.service.JwtService;
 import com.ssafy.happyhouse.jwt.service.JwtServiceImpl;
 import com.ssafy.happyhouse.user.model.UserDto;
 import com.ssafy.happyhouse.user.model.service.UserService;
@@ -87,6 +85,7 @@ public class UserRestConroller {
 				String accessToken = jwtService.createAccessToken("id", user.getId());
 				String refreshToken = jwtService.createRefreshToken("id", user.getId());
 				userService.saveRefreshToken(user.getId(), refreshToken);
+				System.out.println(userService.loginUser(map));
 				
 				logger.debug("로그인 accessToken 정보: {}", accessToken);
 				logger.debug("로그인 refreshToken 정보: {}", refreshToken);
@@ -102,6 +101,7 @@ public class UserRestConroller {
 				response.addCookie(RTCookie);
 				
 				resultMap.put("message", SUCCESS);
+				resultMap.put("id", user.getId());
 				status = HttpStatus.ACCEPTED;
 			} else {
 				resultMap.put("message", FAIL);
@@ -153,6 +153,32 @@ public class UserRestConroller {
 			map.put("message", e.getMessage());
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
+		return new ResponseEntity<Map<String, Object>>(map, status);
+	}
+	
+	//acess token 재발급
+	@PostMapping("/refresh/{id}")
+	public ResponseEntity<?> refreshToken(@PathVariable("id") String id, @CookieValue String refreshToken, HttpServletResponse response) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		logger.debug("token: {}, id: {}", refreshToken, id);
+		if (jwtService.checkToken(refreshToken)) {
+			String accessToken = jwtService.createAccessToken("id", id);
+			logger.debug("token: {}", accessToken);
+			logger.debug("정상적으로 액세스 토큰 재발급!!!");
+			
+			Cookie ATCookie = new Cookie("accessToken", URLEncoder.encode(accessToken, "utf-8"));
+			ATCookie.setPath("/");
+			ATCookie.setMaxAge(60 * 60 * 2);
+			response.addCookie(ATCookie);
+			
+			map.put("message", SUCCESS);
+			status = HttpStatus.ACCEPTED;
+		} else {
+			logger.debug("리프레쉬토큰도 사용불!!!!!!");
+			status = HttpStatus.UNAUTHORIZED;
+		}
+		
 		return new ResponseEntity<Map<String, Object>>(map, status);
 	}
 
