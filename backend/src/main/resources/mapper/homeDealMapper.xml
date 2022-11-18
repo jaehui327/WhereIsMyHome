@@ -17,4 +17,8 @@
 		where info.aptCode=deal.aptCode and info.dongCode=dong.dongCode and info.dongCode=#{regcode};
 	</select>
 	
+	<select id="selectAll" resultType="com.ssafy.happyhouse.homeDeal.model.HouseInfoDto">
+		select aptCode, apartmentName, lng, lat from houseinfo
+	</select>
+	
 </mapper>
