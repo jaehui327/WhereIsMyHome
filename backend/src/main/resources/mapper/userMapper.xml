@@ -48,19 +48,19 @@
 	<select id="getRefreshToken" parameterType="string" resultType="string">
 		select token
 		from users
-		where user_id = #{userId}
+		where user_id = #{id}
 	</select>
 	
 	<update id="saveRefreshToken" parameterType="map">
 		update users
 		set token = #{token}
-		where user_id = #{userId}
+		where user_id = #{id}
 	</update>
 	
 	<update id="deleteRefreshToken" parameterType="map">
 		update users
 		set token = #{token, jdbcType=VARCHAR}
-		where user_id = #{userId}
+		where user_id = #{id}
 	</update>
 	
 </mapper>
