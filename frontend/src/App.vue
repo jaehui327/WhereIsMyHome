@@ -1,9 +1,9 @@
 <template>
   <div id="app">
     <Nav />
-    <Header />
+    <Header v-if="this.$route.path !== '/map'" />
     <router-view id="wrapper"></router-view>
-    <Footer />
+    <Footer v-if="this.$route.path !== '/map'" />
   </div>
 </template>
 
