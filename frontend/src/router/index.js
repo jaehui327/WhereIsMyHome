@@ -80,6 +80,11 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/map",
+    name: "map",
+    component: () => import("@/views/MapView"),
+  },
 ];
 
 const router = new VueRouter({

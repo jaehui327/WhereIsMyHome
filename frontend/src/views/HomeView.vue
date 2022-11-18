@@ -1,14 +1,11 @@
 <template>
-  <div class="home">
-    홈화면
-  </div>
+  <section>홈</section>
 </template>
 
 <script>
-// @ is an alias to /src
-
 export default {
   name: "HomeView",
-  components: {},
 };
 </script>
+
+<style scoped></style>
