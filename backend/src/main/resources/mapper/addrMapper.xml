@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.happyhouse.addr.model.mapper.AddrMapper">
+	
+	<select id="selectSido" resultType="com.ssafy.happyhouse.addr.model.AddrDto">
+		select * from dongcode where dongCode like '__00000000'
+	</select>
+	
+	<select id="selectGugun" parameterType="string" resultType="com.ssafy.happyhouse.addr.model.AddrDto">
+		select * from dongcode where dongCode like '${sido}___00000'
+	</select>
+	
+	<select id="selectDong" parameterType="string" resultType="com.ssafy.happyhouse.addr.model.AddrDto">
+		select * from dongcode where dongCode like '${gugun}_____'
+	</select>
+	
+</mapper>

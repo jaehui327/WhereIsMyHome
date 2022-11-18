@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.happyhouse.homeDeal.model.mapper.HomeDealMapper">
+	
+	<select id="selectHouseDeal" parameterType="map"  resultType="com.ssafy.happyhouse.homeDeal.model.HomeDealDto">
+		select deal.dealAmount, deal.dealYear, deal.dealMonth, deal.dealDay, deal.area, deal.floor, deal.aptCode, 
+		info.buildYear, info.roadName as address, info.roadNameBonBun, info.roadNameBuBun, dong.dongName, info.apartmentName, info.lng, info.lat 
+		from houseinfo as info, housedeal as deal, dongcode as dong 
+		where info.aptCode=deal.aptCode and info.dongCode=dong.dongCode and info.dongCode=#{regcode} and deal.dealYear=#{year} and deal.dealMonth=#{month};
+	</select>
+	
+	<select id="selectHouseInfo" parameterType="string"  resultType="com.ssafy.happyhouse.homeDeal.model.HomeDealDto">
+		select deal.dealAmount, deal.dealYear, deal.dealMonth, deal.dealDay, deal.area, deal.floor, deal.aptCode, 
+		info.buildYear, info.roadName, info.roadNameBonBun, info.roadNameBuBun, dong.dongName, info.apartmentName, info.lng, info.lat
+		from houseinfo as info, housedeal as deal, dongcode as dong
+		where info.aptCode=deal.aptCode and info.dongCode=dong.dongCode and info.dongCode=#{regcode};
+	</select>
+	
+</mapper>

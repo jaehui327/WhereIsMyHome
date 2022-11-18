@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.happyhouse.user.model.mapper.UserMapper">
+
+	<resultMap type="UserDto" id="user">
+		<result column="user_id" property="id"/>
+		<result column="user_pw" property="pw"/>
+		<result column="user_name" property="name"/>
+		<result column="address" property="address"/>
+		<result column="phone" property="phone"/>
+		<result column="role" property="role"/>
+	</resultMap>
+
+	<select id="idCheck" parameterType="string" resultType="int">
+		select count(user_id) from users where user_id=#{id}
+	</select>
+	
+	<insert id="join" parameterType="UserDto">
+		insert into users values(#{id}, #{pw}, #{name}, #{address}, #{phone}, #{role})
+	</insert>
+	
+	<select id="loginUser" parameterType="map" resultMap="user">
+		select user_id, user_pw, user_name, address, phone, `role` from users 
+		where user_id = #{id} and user_pw = #{pw};
+	</select>
+	
+	<select id="getUser" parameterType="string" resultMap="user">
+		select user_id, user_pw, user_name, address, phone, `role` from users where user_id=#{id}
+	</select>
+	
+	<update id="modify" parameterType="UserDto">
+		update users 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="pw != null">user_pw = #{pw},</if>
+			<if test="name!= null">user_name = #{name},</if>
+			<if test="address != null">address = #{address},</if>
+			<if test="phone != null">phone = #{phone},</if>
+			<if test="role != null">role = #{role},</if>
+		</trim>
+		where user_id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="string">
+		delete from users where user_id=#{id}
+	</delete>
+	
+	<select id="getRefreshToken" parameterType="string" resultType="string">
+		select token
+		from users
+		where user_id = #{userId}
+	</select>
+	
+	<update id="saveRefreshToken" parameterType="map">
+		update users
+		set token = #{token}
+		where user_id = #{userId}
+	</update>
+	
+	<update id="deleteRefreshToken" parameterType="map">
+		update users
+		set token = #{token, jdbcType=VARCHAR}
+		where user_id = #{userId}
+	</update>
+	
+</mapper>

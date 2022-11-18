@@ -1,0 +1,21 @@
+body {
+	position: relative;
+	min-height: 100vh;
+}
+
+header {
+	height: auto;
+	background: url("/assets/img/songdo.jfif");
+	background-position: center;
+	background-repeat: no-repeat;
+	background-attachment: scroll;
+	background-size: cover;
+	color: white;
+	line-height: 70px;
+	padding: 0px 30px;
+}
+
+
+.login-form {
+	margin: 0 auto;
+}

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.happyhouse.answer.model.mapper.AnswerMapper">
+
+	<select id="selectAllAnswerByQuestionNo" parameterType="int" 
+		resultType="com.ssafy.happyhouse.answer.model.AnswerDto">
+		select answer_no as answerNo, question_no as questionNo, content, user_id as userId, create_time as createTime, update_time as updateTime, `like` 
+		from answers
+		where question_no = #{questionNo}
+	</select>
+	
+	<insert id="insertAnswer" parameterType="map">
+		insert into answers(question_no, content, user_id) values(#{questionNo}, #{content}, #{userId})
+	</insert>
+	
+	<update id="updateAnswer" parameterType="map">
+		update answers set content = #{content}, update_time = CURRENT_TIMESTAMP where answer_no = #{answerNo}
+	</update>
+	
+	<delete id="deleteAnswer" parameterType="int">
+		delete from answers where answer_no = #{no}
+	</delete>
+	
+	<update id="addLike" parameterType="int">
+		update answers set `like` = `like` + 1 where answer_no = #{no}
+	</update>
+	
+	<update id="subLike" parameterType="int">
+		update answers set `like` = `like` - 1 where answer_no = #{no}
+	</update>
+	
+	<select id="selectLikeByAnswerNo" parameterType="int" resultType="int">
+		select `like` from answers where answer_no = #{no}
+	</select>
+
+</mapper>

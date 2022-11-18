@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.happyhouse.notice.model.mapper.NoticeMapper">
+
+	<insert id="insertNotice" parameterType="NoticeDto">
+		insert into notices(admin_id, subject, content) values (#{id}, #{subject}, #{content})
+	</insert>
+	
+	<update id="modfiyNotice" parameterType="NoticeDto">
+		update notices set subject=#{subject}, content=#{content} where notice_no=#{no}
+	</update>
+	
+	<delete id="deleteNotice" parameterType="int">
+		delete from notices where notice_no=#{no}
+	</delete>
+	
+	<select id="selectByNo" parameterType="int" resultType="NoticeDto">
+		select * from notices where notice_no=#{no}
+	</select>
+	
+	<update id="updateHit" parameterType="int">
+		update notices set hit=hit+1 where notice_no=#{no}
+	</update>
+	
+	<select id="selectAll" resultType="NoticeDto">
+		select * from notices order by notice_no desc
+	</select>
+	
+</mapper>
