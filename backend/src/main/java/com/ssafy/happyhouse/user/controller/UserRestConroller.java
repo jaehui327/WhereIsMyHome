@@ -43,7 +43,7 @@ public class UserRestConroller {
 	private static final String FAIL = "fail";
 
 	@Autowired
-	private JwtServiceImpl JwtService;
+	private JwtServiceImpl jwtService;
 	
 	@Autowired
 	private UserService userService;
@@ -73,27 +73,43 @@ public class UserRestConroller {
 
 	// 로그인
 	@PostMapping("/login")
-	private ResponseEntity<?> login(@RequestBody Map<String, Object> map, HttpSession session,
-			HttpServletResponse response) {
+	private ResponseEntity<?> login(@RequestBody Map<String, Object> map,
+			HttpSession session, HttpServletResponse response) {
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = null;
 		try {
-			map.put("pw", SHA256.encodeSha256((String) map.get("pw")));
 			UserDto user = userService.loginUser(map);
 			logger.info("user 정보 {}", user);
 			if (user != null) {
-				session.setAttribute("loginUser", user);
-
-				Cookie cookie = new Cookie("loginUser", URLEncoder.encode((String) map.get("id"), "utf-8"));
-				cookie.setPath("/");
-				cookie.setMaxAge(60 * 60 * 24 * 365 * 40);
-				response.addCookie(cookie);
-				user.setPw(null);
-				return new ResponseEntity<UserDto>(user, HttpStatus.OK);
+				String accessToken = jwtService.createAccessToken("id", user.getId());
+				String refreshToken = jwtService.createRefreshToken("id", user.getId());
+				userService.saveRefreshToken((String )map.get("id"), refreshToken);
+				
+				logger.debug("로그인 accessToken 정보: {}", accessToken);
+				logger.debug("로그인 refreshToken 정보: {}", refreshToken);
+				
+				Cookie ATCookie = new Cookie("accessToken", URLEncoder.encode(accessToken, "utf-8"));
+				ATCookie.setPath("/");
+				ATCookie.setMaxAge(60 * 60 * 2);
+				response.addCookie(ATCookie);
+				
+				Cookie RTCookie = new Cookie("refreshToken", URLEncoder.encode(refreshToken, "utf-8"));
+				RTCookie.setPath("/");
+				RTCookie.setMaxAge(60 * 60 * 24 * 7 * 2);
+				response.addCookie(RTCookie);
+				
+				resultMap.put("message", SUCCESS);
+				status = HttpStatus.ACCEPTED;
 			} else {
-				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+				resultMap.put("message", FAIL);
+				status = HttpStatus.ACCEPTED;
 			}
 		} catch (Exception e) {
-			return exceptionHandling(e);
+			logger.error("로그인 실패: {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 
 	// 회원정보 수정
