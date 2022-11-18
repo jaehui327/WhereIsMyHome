@@ -62,6 +62,7 @@ public class UserRestConroller {
 	@PostMapping("/join")
 	private ResponseEntity<?> join(@RequestBody UserDto user) {
 		try {
+			System.out.println(user);
 			user.setPw(SHA256.encodeSha256(user.getPw()));
 			userService.join(user);
 			return new ResponseEntity<Void>(HttpStatus.CREATED);

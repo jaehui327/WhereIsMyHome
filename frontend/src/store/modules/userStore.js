@@ -1,4 +1,4 @@
-import { login } from "@/api/user";
+import { login, doRegisterUser } from "@/api/user";
 import router from "@/router";
 
 const userStore = {
@@ -63,6 +63,19 @@ const userStore = {
       if (router.currentRoute.path !== "/") {
         router.push("/");
       }
+    },
+    async registerUser(context, user) {
+      let status;
+      await doRegisterUser(
+        user,
+        () => {
+          status = 200;
+        },
+        (error) => {
+          status = error.response.status;
+        }
+      );
+      return status;
     },
   },
 };

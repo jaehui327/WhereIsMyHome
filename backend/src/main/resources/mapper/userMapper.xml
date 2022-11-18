@@ -17,7 +17,7 @@
 	</select>
 	
 	<insert id="join" parameterType="UserDto">
-		insert into users values(#{id}, #{pw}, #{name}, #{address}, #{phone}, #{role})
+		insert into users values(#{id}, #{pw}, #{name}, #{address}, #{phone}, #{role}, null)
 	</insert>
 	
 	<select id="loginUser" parameterType="map" resultMap="user">
