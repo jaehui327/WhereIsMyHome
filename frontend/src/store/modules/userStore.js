@@ -43,7 +43,9 @@ const userStore = {
           if (data.message === "success") {
             commit("SET_IS_LOGIN", true);
             commit("SET_IS_LOGIN_ERROR", false);
-            commit("SET_USER_INFO", data);
+            commit("SET_USER_INFO", {
+              id: data.id,
+            });
           }
           status = data.message;
         },

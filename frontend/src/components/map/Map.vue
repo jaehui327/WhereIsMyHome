@@ -3,6 +3,10 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
+const mapStore = "mapStore";
+
 export default {
   name: "Map",
   data() {
@@ -23,6 +27,9 @@ export default {
       this.initMap();
     }
   },
+  computed: {
+    ...mapGetters(mapStore, ["aptList"]),
+  },
   methods: {
     initMap() {
       const container = document.getElementById("map");
@@ -31,6 +38,9 @@ export default {
         level: 3,
       };
       this.map = new kakao.maps.Map(container, options);
+    },
+    initMarker() {
+      console.log();
     },
   },
 };
