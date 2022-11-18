@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.happyhouse.homeDeal.model.HomeDealDto;
+import com.ssafy.happyhouse.homeDeal.model.HouseInfoDto;
 import com.ssafy.happyhouse.homeDeal.model.service.HomeDealService;
 
 import io.swagger.annotations.Api;
@@ -63,6 +64,16 @@ public class HomeDealRestController {
 			} else {
 				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 			}
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+	
+	@GetMapping()
+	public ResponseEntity<?> selectAll() {
+		try {
+			List<HouseInfoDto> houseInfo = service.selectAll();
+			return new ResponseEntity<List<HouseInfoDto>>(houseInfo, HttpStatus.OK);
 		} catch (Exception e) {
 			return exceptionHandling(e);
 		}

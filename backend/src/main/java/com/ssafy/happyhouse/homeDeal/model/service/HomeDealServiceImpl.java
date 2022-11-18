@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.happyhouse.homeDeal.model.HomeDealDto;
+import com.ssafy.happyhouse.homeDeal.model.HouseInfoDto;
 import com.ssafy.happyhouse.homeDeal.model.mapper.HomeDealMapper;
 
 @Service
@@ -29,6 +30,11 @@ public class HomeDealServiceImpl implements HomeDealService {
 	@Override
 	public List<HomeDealDto> selectHouseInfo(String regcode) throws SQLException {
 		return mapper.selectHouseInfo(regcode);
+	}
+
+	@Override
+	public List<HouseInfoDto> selectAll() throws SQLException {
+		return mapper.selectAll();
 	}
 
 }
