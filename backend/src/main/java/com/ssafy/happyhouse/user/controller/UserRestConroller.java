@@ -78,12 +78,15 @@ public class UserRestConroller {
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = null;
 		try {
+			System.out.println(map);
+			map.put("pw", SHA256.encodeSha256((String) map.get("pw")));
+			System.out.println(map);
 			UserDto user = userService.loginUser(map);
 			logger.info("user 정보 {}", user);
 			if (user != null) {
 				String accessToken = jwtService.createAccessToken("id", user.getId());
 				String refreshToken = jwtService.createRefreshToken("id", user.getId());
-				userService.saveRefreshToken((String )map.get("id"), refreshToken);
+				userService.saveRefreshToken(user.getId(), refreshToken);
 				
 				logger.debug("로그인 accessToken 정보: {}", accessToken);
 				logger.debug("로그인 refreshToken 정보: {}", refreshToken);
