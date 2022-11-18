@@ -39,6 +39,7 @@ const userStore = {
       await login(
         user,
         ({ data }) => {
+          console.log(data);
           commit("SET_IS_LOGIN", true);
           commit("SET_IS_LOGIN_ERROR", false);
           commit("SET_USER_INFO", data);
