@@ -1,7 +1,10 @@
 <template>
   <div>
-    <b-sidebar id="map-sidebar"> 사이드바 </b-sidebar>
-    <b-button v-b-toggle.map-sidebar>사이드바</b-button>
+    <b-sidebar id="map-sidebar" width="600px" title="WhereIsMyHome">
+      <div id="map-sidebar-searchbox" class="bg-info p-4">
+        <b-form-input placeholder="검색창"></b-form-input>
+      </div>
+    </b-sidebar>
   </div>
 </template>
 
@@ -11,4 +14,4 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped></style>
