@@ -2,6 +2,7 @@ package com.ssafy.happyhouse.homeDeal.controller;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,12 +69,42 @@ public class HomeDealRestController {
 			return exceptionHandling(e);
 		}
 	}
-	
-	@GetMapping()
-	public ResponseEntity<?> selectAll() {
+
+	@GetMapping("/{lat1}/{lng1}/{lat2}/{lng2}/{level}")
+	public ResponseEntity<?> selectHouseInfo(@PathVariable String lat1, @PathVariable String lng1,
+			@PathVariable String lat2, @PathVariable String lng2, @PathVariable int level) {
 		try {
-			List<HouseInfoDto> houseInfo = service.selectAll();
-			return new ResponseEntity<List<HouseInfoDto>>(houseInfo, HttpStatus.OK);
+			Map<String, Object> resultMap = new HashMap<>();
+			List<HouseInfoDto> houseInfo = service.selectHouseInfo(lat1, lng1, lat2, lng2);
+			if (level < 4) {
+				// 개별
+				return new ResponseEntity<List<HouseInfoDto>>(houseInfo, HttpStatus.OK);
+			} else if (level < 6) {
+				// 동
+				for(int i = 0; i < houseInfo.size(); i++) {
+					String dongCode = houseInfo.get(i).getDongCode();
+					if (!resultMap.containsKey(dongCode)) {
+						resultMap.put(dongCode, service.selectAreaDongHouseInfo(dongCode));
+					}
+				}
+			} else if (level < 10) {
+				// 시군구
+				for(int i = 0; i < houseInfo.size(); i++) {
+					String gugunCode = houseInfo.get(i).getDongCode().substring(0, 5);
+					if (!resultMap.containsKey(gugunCode)) {
+						resultMap.put(gugunCode, service.selectAreaGugunHouseInfo(gugunCode));
+					}
+				}
+			} else {
+				// 도
+				for(int i = 0; i < houseInfo.size(); i++) {
+					String sidoCode = houseInfo.get(i).getDongCode().substring(0, 2);
+					if (!resultMap.containsKey(sidoCode)) {
+						resultMap.put(sidoCode, service.selectAreaSidoHouseInfo(sidoCode));
+					}
+				}
+			}
+			return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
 		} catch (Exception e) {
 			return exceptionHandling(e);
 		}

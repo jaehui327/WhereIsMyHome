@@ -2,6 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ssafy.happyhouse.homeDeal.model.mapper.HomeDealMapper">
+	<resultMap type="HashMap" id="addrMap">
+		<id column="addrName" property="addrName" />	
+		<id column="lat" property="lat" />
+		<id column="lng" property="lng" />
+		<id column="cnt" property="cnt" />
+	</resultMap>
 	
 	<select id="selectHouseDeal" parameterType="map"  resultType="com.ssafy.happyhouse.homeDeal.model.HomeDealDto">
 		select deal.dealAmount, deal.dealYear, deal.dealMonth, deal.dealDay, deal.area, deal.floor, deal.aptCode, 
@@ -17,8 +23,23 @@
 		where info.aptCode=deal.aptCode and info.dongCode=dong.dongCode and info.dongCode=#{regcode};
 	</select>
 	
-	<select id="selectAll" resultType="com.ssafy.happyhouse.homeDeal.model.HouseInfoDto">
-		select aptCode, apartmentName, lng, lat from houseinfo
+	<select id="selectAreaHouseInfo" parameterType="map" resultType="com.ssafy.happyhouse.homeDeal.model.HouseInfoDto">
+		select aptCode, apartmentName, dongCode, lng, lat from houseinfo where lat between #{lat1} and #{lat2} and lng between #{lng1} and #{lng2}
 	</select>
 	
+	<select id="selectAreaDongHouseInfo" parameterType="string" resultMap="addrMap">
+        select addr.dongName as addrName, avg(hi.lat) as lat, avg(hi.lng) as lng, count(*) as cnt
+		from dongCode addr, houseinfo hi
+		where addr.dongCode = #{dongCode} and addr.dongCode = hi.dongCode;
+	</select>
+	<select id="selectAreaGugunHouseInfo" parameterType="string" resultMap="addrMap">
+	    select addr.gugunName as addrName, avg(hi.lat) as lat, avg(hi.lng) as lng, count(*) as cnt
+		from dongCode addr, houseinfo hi
+		where addr.dongCode = '${gugunCode}00000'  and hi.dongCode like '${gugunCode}_____';
+	</select>
+	<select id="selectAreaSidoHouseInfo" parameterType="string" resultMap="addrMap">
+		select addr.sidoName as addrName, avg(hi.lat) as lat, avg(hi.lng) as lng, count(*) as cnt
+		from dongCode addr, houseinfo hi
+		where addr.dongCode = '${sidoCode}00000000'  and hi.dongCode like '${sidoCode}________';
+	</select>
 </mapper>
