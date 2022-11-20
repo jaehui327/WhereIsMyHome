@@ -7,6 +7,7 @@ public class HouseInfoDto {
 	
 	private String aptCode;
 	private String apartmentName;
+	private String dongCode;
 	private String lat;
 	private String lng;
 

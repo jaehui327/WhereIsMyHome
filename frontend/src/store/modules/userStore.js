@@ -36,25 +36,24 @@ const userStore = {
   },
   actions: {
     async userLogin({ commit }, user) {
+      let status;
       await login(
         user,
         ({ data }) => {
-          commit("SET_IS_LOGIN", true);
-          commit("SET_IS_LOGIN_ERROR", false);
-          commit("SET_USER_INFO", data);
-          // if (data.message === "success") {
-          // const accessToken = data["access-token"];
-          // const refreshToken = data["refresh-token"];
-
-          //   commit("SET_IS_VALID_TOKEN", true);
-          // }
-          alert("로그인되었습니다.");
-          router.push("/");
+          if (data.message === "success") {
+            commit("SET_IS_LOGIN", true);
+            commit("SET_IS_LOGIN_ERROR", false);
+            commit("SET_USER_INFO", {
+              id: data.id,
+            });
+          }
+          status = data.message;
         },
         (error) => {
           console.log(error);
         }
       );
+      return status;
     },
     logout({ commit }) {
       alert("로그아웃");

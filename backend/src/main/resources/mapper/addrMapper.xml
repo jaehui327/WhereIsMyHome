@@ -14,5 +14,4 @@
 	<select id="selectDong" parameterType="string" resultType="com.ssafy.happyhouse.addr.model.AddrDto">
 		select * from dongcode where dongCode like '${gugun}_____'
 	</select>
-	
 </mapper>

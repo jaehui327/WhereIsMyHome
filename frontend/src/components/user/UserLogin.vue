@@ -10,9 +10,7 @@
         <b-form-input type="password" id="login-pw" v-model="pw" class="col-sm-8" />
       </b-row>
       <b-card-footer class="p-4 pt-0 border-top-0 bg-transparent text-center">
-        <button id="type-password" class="btn-outline-dark btn" @click="userLogin({ id, pw })">
-          Login
-        </button>
+        <button id="type-password" class="btn-outline-dark btn" @click="login">Login</button>
       </b-card-footer>
     </b-card>
   </section>
@@ -33,6 +31,18 @@ export default {
   },
   methods: {
     ...mapActions(userStore, ["userLogin"]),
+    login() {
+      this.userLogin({ id: this.id, pw: this.pw }).then((status) => {
+        if (status === "success") {
+          alert("로그인되었습니다.");
+          this.$router.push("/");
+        } else {
+          alert("아이디, 비밀번호를 확인해주세요.");
+          this.id = "";
+          this.pw = "";
+        }
+      });
+    },
   },
 };
 </script>

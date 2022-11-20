@@ -1,40 +1,18 @@
 <template>
   <section>
-    <div id="map"></div>
+    <map-header />
+    <!-- <map-sidebar /> -->
+    <Map />
   </section>
 </template>
 
 <script>
+import Map from "@/components/map/Map.vue";
+// import MapSidebar from "../components/map/MapSidebar.vue";
+import MapHeader from "../components/map/MapHeader.vue";
 export default {
   name: "MapView",
-  data() {
-    return {
-      map: null,
-    };
-  },
-  mounted() {
-    if (!window.kakao || !window.kakao.maps) {
-      const script = document.createElement("script");
-      script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${process.env.VUE_APP_KAKAO_KEY}`;
-      /* global kakao */
-      script.addEventListener("load", () => {
-        kakao.maps.load(this.initMap);
-      });
-      document.head.appendChild(script);
-    } else {
-      this.initMap();
-    }
-  },
-  methods: {
-    initMap() {
-      const container = document.getElementById("map");
-      const options = {
-        center: new kakao.maps.LatLng(33.450701, 126.570667),
-        level: 3,
-      };
-      this.map = new kakao.maps.Map(container, options);
-    },
-  },
+  components: { Map, MapHeader },
 };
 </script>
 
