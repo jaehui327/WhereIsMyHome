@@ -1,16 +1,34 @@
 <template>
-  <div>
-    <b-sidebar id="map-sidebar" width="600px" title="WhereIsMyHome">
-      <div id="map-sidebar-searchbox" class="bg-info p-4">
-        <b-form-input placeholder="검색창"></b-form-input>
-      </div>
-    </b-sidebar>
-  </div>
+  <b-sidebar id="map-sidebar" width="500px" v-model="ISO" right @hidden="close">
+    <div class="p-4">
+      <h2 class="font-weight-bold">{{ selectedAddr === null ? "" : selectedAddr.addrName }}</h2>
+    </div>
+    {{ addrAptList }}
+  </b-sidebar>
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
+
+const mapStore = "mapStore";
+
 export default {
   name: "MapSidebar",
+  computed: {
+    ...mapGetters(mapStore, ["isSidebarOpen", "selectedAddr", "addrAptList"]),
+    ISO: {
+      get() {
+        return this.isSidebarOpen;
+      },
+      set() {},
+    },
+  },
+  methods: {
+    ...mapActions(mapStore, ["closeSidebar"]),
+    close() {
+      this.closeSidebar();
+    },
+  },
 };
 </script>
 

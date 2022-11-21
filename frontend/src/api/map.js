@@ -9,4 +9,8 @@ async function doGetAptList(area, success, fail) {
     .catch(fail);
 }
 
-export { doGetAptList };
+async function doGetAddrAptList(addrCode, success, fail) {
+  await api.get(`/homedeal/apt-info/addr/${addrCode}`).then(success).catch(fail);
+}
+
+export { doGetAptList, doGetAddrAptList };

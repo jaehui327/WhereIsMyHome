@@ -82,7 +82,6 @@ public class HomeDealRestController {
 				return new ResponseEntity<List<HouseInfoDto>>(houseInfo, HttpStatus.OK);
 			} else if (level < 7) {
 				// 동
-
 				resultMap = service.selectAreaDongHouseInfo(lat1, lng1, lat2, lng2);
 
 			} else if (level < 11) {
@@ -91,6 +90,25 @@ public class HomeDealRestController {
 			} else {
 				// 도
 				resultMap = service.selectAreaSidoHouseInfo(lat1, lng1, lat2, lng2);
+			}
+
+			return new ResponseEntity<List<Map<String, Object>>>(resultMap, HttpStatus.OK);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+	
+	@GetMapping("/apt-info/addr/{addrCode}")
+	public ResponseEntity<?> selectAddrHouseInfo(@PathVariable String addrCode) {
+		try {
+			int type = addrCode.length();
+			List<Map<String, Object>> resultMap = new ArrayList<Map<String, Object>>();
+			if (type == 10) {
+				resultMap = service.selectDongHouseInfo(addrCode);
+			} else if (type == 5) {
+				resultMap = service.selectGugunHouseInfo(addrCode);
+			} else if (type == 2) {
+				resultMap = service.selectSidoHouseInfo(addrCode);
 			}
 			return new ResponseEntity<List<Map<String, Object>>>(resultMap, HttpStatus.OK);
 		} catch (Exception e) {

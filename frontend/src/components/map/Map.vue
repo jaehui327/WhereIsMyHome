@@ -15,6 +15,9 @@ export default {
       markers: [],
     };
   },
+  created() {
+    this.closeSidebar();
+  },
   mounted() {
     if (!window.kakao || !window.kakao.maps) {
       const script = document.createElement("script");
@@ -29,10 +32,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(mapStore, ["aptList", "areaAptList"]),
+    ...mapGetters(mapStore, ["aptList"]),
   },
   methods: {
-    ...mapActions(mapStore, ["getAptList"]),
+    ...mapActions(mapStore, ["getAptList", "sidebarToggle", "getAddrAptList", "closeSidebar"]),
     initMap() {
       const container = document.getElementById("map");
       const options = {
@@ -79,11 +82,18 @@ export default {
         });
       } else {
         this.aptList.map((apt) => {
+          const test = document.createElement("div");
+          test.className = "areaMarker";
+          test.innerText = apt.addrName;
+          test.addEventListener("click", () => {
+            this.addrClick(apt);
+          });
           const marker = new kakao.maps.CustomOverlay({
             map: this.map,
             position: new kakao.maps.LatLng(apt.lat, apt.lng),
-            content: `<div class="areaMarker" @click="addrClick(${apt.addrCode})">${apt.addrName}</div>`,
+            content: test,
           });
+
           this.markers.push(marker);
         });
       }
@@ -93,8 +103,10 @@ export default {
         this.markers[i].setMap(null);
       }
     },
-    addrClick(addrCode) {
-      console.log(addrCode);
+    addrClick(addr) {
+      this.map.panTo(new kakao.maps.LatLng(addr.lat, addr.lng));
+      this.getAddrAptList(addr.addrCode);
+      this.sidebarToggle(addr);
     },
   },
 };
@@ -114,5 +126,9 @@ export default {
   border-radius: 40%;
   display: table-cell;
   vertical-align: middle;
+}
+
+.areaMarker:hover {
+  cursor: pointer;
 }
 </style>

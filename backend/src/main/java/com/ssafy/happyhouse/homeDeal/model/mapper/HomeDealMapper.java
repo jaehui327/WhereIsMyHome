@@ -14,4 +14,11 @@ public interface HomeDealMapper {
 	List<Map<String, Object>> selectAreaDongHouseInfo(String lat1, String lng1, String lat2, String lng2) throws SQLException;
 	List<Map<String, Object>> selectAreaGugunHouseInfo(String lat1, String lng1, String lat2, String lng2) throws SQLException;
 	List<Map<String, Object>> selectAreaSidoHouseInfo(String lat1, String lng1, String lat2, String lng2) throws SQLException;
+	
+	List<Map<String, Object>> selectDongHouseInfo(String addrCode);
+	List<Map<String, Object>> selectGugunHouseInfo(String addrCode);
+	List<Map<String, Object>> selectSidoHouseInfo(String addrCode);
+	String selectDongAvgDealAmount(String addrCode);
+	String selectGugunAvgDealAmount(String addrCode);
+	String selectSidoAvgDealAmount(String addrCode);
 }
