@@ -69,7 +69,7 @@ export default {
 
       await this.getAptList({ lat1, lng1, lat2, lng2, level });
 
-      if (level < 4) {
+      if (level < 5) {
         this.aptList.map((apt) => {
           const marker = new kakao.maps.Marker({
             map: this.map,
@@ -78,11 +78,11 @@ export default {
           this.markers.push(marker);
         });
       } else {
-        Object.keys(this.aptList).map((key) => {
+        this.aptList.map((apt) => {
           const marker = new kakao.maps.CustomOverlay({
             map: this.map,
-            position: new kakao.maps.LatLng(this.aptList[key].lat, this.aptList[key].lng),
-            content: `<div class="areaMarker">${this.aptList[key].addrName}</div>`,
+            position: new kakao.maps.LatLng(apt.lat, apt.lng),
+            content: `<div class="areaMarker" @click="addrClick(${apt.addrCode})">${apt.addrName}</div>`,
           });
           this.markers.push(marker);
         });
@@ -92,6 +92,9 @@ export default {
       for (let i = 0; i < this.markers.length; i++) {
         this.markers[i].setMap(null);
       }
+    },
+    addrClick(addrCode) {
+      console.log(addrCode);
     },
   },
 };
@@ -104,11 +107,11 @@ export default {
 }
 
 .areaMarker {
-  width: 50px;
-  height: 50px;
-  background-color: skyblue;
+  padding: 10px;
+  background-color: #646464;
+  color: white;
   text-align: center;
-  border-radius: 50%;
+  border-radius: 40%;
   display: table-cell;
   vertical-align: middle;
 }

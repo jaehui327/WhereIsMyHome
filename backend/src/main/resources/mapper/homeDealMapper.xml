@@ -4,6 +4,7 @@
 <mapper namespace="com.ssafy.happyhouse.homeDeal.model.mapper.HomeDealMapper">
 	<resultMap type="HashMap" id="addrMap">
 		<id column="addrName" property="addrName" />	
+		<id column="addrCode" property="addrCode" />
 		<id column="lat" property="lat" />
 		<id column="lng" property="lng" />
 		<id column="cnt" property="cnt" />
@@ -27,19 +28,32 @@
 		select aptCode, apartmentName, dongCode, lng, lat from houseinfo where lat between #{lat1} and #{lat2} and lng between #{lng1} and #{lng2}
 	</select>
 	
-	<select id="selectAreaDongHouseInfo" parameterType="string" resultMap="addrMap">
-        select addr.dongName as addrName, avg(hi.lat) as lat, avg(hi.lng) as lng, count(*) as cnt
-		from dongCode addr, houseinfo hi
-		where addr.dongCode = #{dongCode} and addr.dongCode = hi.dongCode;
+	<select id="selectAreaDongHouseInfo" parameterType="map" resultMap="addrMap">
+		select b.dongName as addrName, b.dongCode as addrCode, avg(a.lat) as lat, avg(a.lng) as lng, count(a.apartmentName) as cnt
+		from houseinfo a, (select hi.dongCode as dongCode, addr.dongName as dongName
+			from houseinfo hi, dongcode addr
+			where hi.lat between #{lat1} and #{lat2} and hi.lng between #{lng1} and #{lng2} and hi.dongCode = addr.dongCode
+			group by hi.dongCode) b
+		where a.dongCode = b.dongCode
+		group by a.dongCode;	
 	</select>
-	<select id="selectAreaGugunHouseInfo" parameterType="string" resultMap="addrMap">
-	    select addr.gugunName as addrName, avg(hi.lat) as lat, avg(hi.lng) as lng, count(*) as cnt
-		from dongCode addr, houseinfo hi
-		where addr.dongCode = '${gugunCode}00000'  and hi.dongCode like '${gugunCode}_____';
+	<select id="selectAreaGugunHouseInfo" parameterType="map" resultMap="addrMap">
+		select b.gugunName as addrName, b.gugunCode as addrCode, avg(a.lat) as lat, avg(a.lng) as lng, count(a.apartmentName) as cnt
+		from houseinfo a, (select hi.sigunguCode as gugunCode, addr.gugunName as gugunName
+			from houseinfo hi, dongcode addr
+			where hi.lat between #{lat1} and #{lat2} and hi.lng between #{lng1} and #{lng2} and addr.dongCode = concat(hi.sigunguCode, '00000')
+	        group by hi.sigunguCode) b
+		where a.dongCode like concat(b.gugunCode, '_____')
+		group by b.gugunCode
 	</select>
-	<select id="selectAreaSidoHouseInfo" parameterType="string" resultMap="addrMap">
-		select addr.sidoName as addrName, avg(hi.lat) as lat, avg(hi.lng) as lng, count(*) as cnt
-		from dongCode addr, houseinfo hi
-		where addr.dongCode = '${sidoCode}00000000'  and hi.dongCode like '${sidoCode}________';
+	<select id="selectAreaSidoHouseInfo" parameterType="map" resultMap="addrMap">
+		select b.sidoName as addrname, b.sidoCode as addrCode, avg(a.lat) as lat, avg(a.lng) as lng, count(a.apartmentName) as cnt
+		from houseinfo a, (
+		select addr.sidoName as sidoName, substr(addr.dongCode, 1, 2) as sidoCode
+			from houseinfo hi, dongcode addr
+			where hi.lat between #{lat1} and #{lat2} and hi.lng between #{lng1} and #{lng2} and addr.dongCode = concat(substr(hi.sigunguCode, 1, 2), '00000000')
+	        group by addr.dongCode) b
+		where a.dongCode like concat(b.sidoCode, '________')
+		group by b.sidoCode;
 	</select>
 </mapper>

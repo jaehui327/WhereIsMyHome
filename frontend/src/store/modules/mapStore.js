@@ -9,8 +9,7 @@ const mapStore = {
     aptList: (state) => {
       return state.aptList;
     },
-    areaAptList: (state) => (lat1, lng1, lat2, lng2, level) => {
-      console.log(level);
+    areaAptList: (state) => (lat1, lng1, lat2, lng2) => {
       const ret = [];
       state.aptList.map((apt) => {
         // console.log(apt);
@@ -31,7 +30,6 @@ const mapStore = {
       await doGetAptList(
         area,
         ({ data }) => {
-          console.log(data);
           commit("SET_APT_LIST", data);
         },
         (error) => {

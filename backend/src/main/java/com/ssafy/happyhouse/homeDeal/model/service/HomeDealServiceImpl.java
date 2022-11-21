@@ -38,21 +38,21 @@ public class HomeDealServiceImpl implements HomeDealService {
 	}
 
 	@Override
-	public Map<String, Object> selectAreaDongHouseInfo(String dongCode) throws SQLException {
+	public List<Map<String, Object>> selectAreaDongHouseInfo(String lat1, String lng1, String lat2, String lng2) throws SQLException {
 		// TODO Auto-generated method stub
-		return mapper.selectAreaDongHouseInfo(dongCode);
+		return mapper.selectAreaDongHouseInfo(lat1, lng1, lat2, lng2);
 	}
 
 	@Override
-	public Map<String, Object> selectAreaGugunHouseInfo(String gugunCode) throws SQLException {
+	public List<Map<String, Object>> selectAreaGugunHouseInfo(String lat1, String lng1, String lat2, String lng2) throws SQLException {
 		// TODO Auto-generated method stub
-		return mapper.selectAreaGugunHouseInfo(gugunCode);
+		return mapper.selectAreaGugunHouseInfo(lat1, lng1, lat2, lng2);
 	}
 
 	@Override
-	public Map<String, Object> selectAreaSidoHouseInfo(String sidoCode) throws SQLException {
+	public List<Map<String, Object>> selectAreaSidoHouseInfo(String lat1, String lng1, String lat2, String lng2) throws SQLException {
 		// TODO Auto-generated method stub
-		return mapper.selectAreaSidoHouseInfo(sidoCode);
+		return mapper.selectAreaSidoHouseInfo(lat1, lng1, lat2, lng2);
 	}
 
 }
