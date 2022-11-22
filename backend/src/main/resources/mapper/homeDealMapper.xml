@@ -22,26 +22,22 @@
 		<id column="lat" property="lat" />
 	</resultMap>
 	
-	<select id="selectHouseDeal" parameterType="map"  resultType="com.ssafy.happyhouse.homeDeal.model.HomeDealDto">
-		select deal.dealAmount, deal.dealYear, deal.dealMonth, deal.dealDay, deal.area, deal.floor, deal.aptCode, 
-		info.buildYear, info.roadName as address, info.roadNameBonBun, info.roadNameBuBun, dong.dongName, info.apartmentName, info.lng, info.lat 
-		from houseinfo as info, housedeal as deal, dongcode as dong 
-		where info.aptCode=deal.aptCode and info.dongCode=dong.dongCode and info.dongCode=#{regcode} and deal.dealYear=#{year} and deal.dealMonth=#{month};
+	<select id="selectHomeDeal" parameterType="string"  resultType="HomeDealDto">
+		select deal.no, deal.dealAmount, deal.dealYear, deal.dealMonth, deal.dealDay, deal.area, deal.floor, deal.aptCode
+		from houseinfo as info, housedeal as deal
+		where info.aptCode=#{aptCode} and info.aptCode=deal.aptCode
 	</select>
 	
-	<select id="selectHouseInfo" parameterType="string"  resultType="com.ssafy.happyhouse.homeDeal.model.HomeDealDto">
-		select deal.dealAmount, deal.dealYear, deal.dealMonth, deal.dealDay, deal.area, deal.floor, deal.aptCode, 
-		info.buildYear, info.roadName, info.roadNameBonBun, info.roadNameBuBun, dong.dongName, info.apartmentName, info.lng, info.lat
-		from houseinfo as info, housedeal as deal, dongcode as dong
-		where info.aptCode=deal.aptCode and info.dongCode=dong.dongCode and info.dongCode=#{regcode};
-	</select>
 	
-	<select id="selectAreaHouseInfo" parameterType="map" resultType="com.ssafy.happyhouse.homeDeal.model.HouseInfoDto">
-		select aptCode, apartmentName, dongCode, lng, lat from houseinfo where lat between #{lat1} and #{lat2} and lng between #{lng1} and #{lng2}
+	<select id="selectAreaHouseInfo" parameterType="map" resultType="HouseInfoDto">
+		select hd.no, hi.aptCode, hi.apartmentName, hi.roadName, hi.roadNameBonbun, hi.roadNameBubun, hi.lng, hi.lat, avg(replace(hd.dealAmount, ',', '')) as avg, hi.buildYear as buildYear
+		from houseinfo hi, housedeal hd
+		where hi.lat between #{lat1} and #{lat2} and hi.lng between #{lng1} and #{lng2} and hi.aptCode = hd.aptCode
+		group by hi.aptCode
 	</select>
 	
 	<select id="selectAreaDongHouseInfo" parameterType="map" resultMap="addrMap">
-		select b.dongName as addrName, b.dongCode as addrCode, avg(a.lat) as lat, avg(a.lng) as lng, count(a.apartmentName) as cnt, avg(c.dealAmount) as avg
+		select b.dongName as addrName, b.dongCode as addrCode, avg(a.lat) as lat, avg(a.lng) as lng, count(a.dongCode) as cnt, avg(replace(c.dealAmount, ',', '')) as avg
 		from houseinfo a, (select hi.dongCode as dongCode, addr.dongName as dongName
 			from houseinfo hi, dongcode addr
 			where hi.dongCode = addr.dongCode and hi.lat <![CDATA[>=]]> #{lat1} and hi.lat <![CDATA[<=]]> #{lat2} and hi.lng <![CDATA[>=]]> #{lng1} and hi.lng <![CDATA[<=]]> #{lng2}
@@ -50,54 +46,39 @@
 		group by a.dongCode order by null	
 	</select>
 	<select id="selectAreaGugunHouseInfo" parameterType="map" resultMap="addrMap">
-		select b.gugunName as addrName, b.gugunCode as addrCode, avg(a.lat) as lat, avg(a.lng) as lng, count(a.apartmentName) as cnt, avg(c.dealAmount) as avg
+		select b.gugunName as addrName, b.gugunCode as addrCode, avg(a.lat) as lat, avg(a.lng) as lng, count(a.dongCode) as cnt, 0
 		from houseinfo a, (select hi.sigunguCode as gugunCode, addr.gugunName as gugunName
 			from houseinfo hi, dongcode addr
 			where addr.dongCode = concat(hi.sigunguCode, '00000') and hi.lat <![CDATA[>=]]> #{lat1} and hi.lat <![CDATA[<=]]> #{lat2} and hi.lng <![CDATA[>=]]> #{lng1} and hi.lng <![CDATA[<=]]> #{lng2}
-	        group by hi.sigunguCode order by null) b, housedeal c
-		where a.lat between #{lat1} and #{lat2} and a.lng between #{lng1} and #{lng2} and a.sigunguCode = b.gugunCode and a.aptCode = c.aptCode
-		group by b.gugunCode order by null
-	</select>
+	        group by hi.sigunguCode order by null) b
+		where a.sigunguCode = b.gugunCode
+		group by b.gugunCode order by null</select>
 	<select id="selectAreaSidoHouseInfo" parameterType="map" resultMap="addrMap">
-		select b.sidoName as addrname, b.sidoCode as addrCode, avg(a.lat) as lat, avg(a.lng) as lng, count(a.apartmentName) as cnt, avg(c.dealAmount) as avg
+		select b.sidoName as addrname, b.sidoCode as addrCode, avg(a.lat) as lat, avg(a.lng) as lng, count(a.dongCode) as cnt, 0
 		from houseinfo a, (
 		select addr.sidoName as sidoName, substr(addr.dongCode, 1, 2) as sidoCode
 			from houseinfo hi, dongcode addr
 			where addr.dongCode = concat(substr(hi.sigunguCode, 1, 2), '00000000') and hi.lat <![CDATA[>=]]> #{lat1} and hi.lat <![CDATA[<=]]> #{lat2} and hi.lng <![CDATA[>=]]> #{lng1} and hi.lng <![CDATA[<=]]> #{lng2}
-	        group by addr.dongCode order by null) b, housedeal c
-		where a.dongCode like concat(b.sidoCode, '%') and a.aptCode = c.aptCode 
+	        group by addr.dongCode order by null) b
+		where a.dongCode like concat(b.sidoCode, '%')
 		group by b.sidoCode order by null
 	</select>
 	
-	<select id="selectDongHouseInfo" parameterType="string" resultMap="addrHouseInfoMap">
+	<select id="selectDongHouseInfo" parameterType="string" resultType="HouseInfoDto">
 		select aptCode, buildYear, roadName, roadNameBonbun, roadNameBubun, apartmentName, lng, lat
 		from houseinfo
 		where dongCode = #{addrCode}
 	</select>
-	<select id="selectGugunHouseInfo" parameterType="string" resultMap="addrHouseInfoMap">
+	<select id="selectGugunHouseInfo" parameterType="string" resultType="HouseInfoDto">
 		select aptCode, buildYear, roadName, roadNameBonbun, roadNameBubun, apartmentName, lng, lat
 		from houseinfo
 		where dongCode like concat(#{addrCode}, '_____')
 	</select>
-	<select id="selectSidoHouseInfo" parameterType="string" resultMap="addrHouseInfoMap">
+	<select id="selectSidoHouseInfo" parameterType="string" resultType="HouseInfoDto">
 		select aptCode, buildYear, roadName, roadNameBonbun, roadNameBubun, apartmentName, lng, lat
 		from houseinfo
 		where dongCode like concat(#{addrCode}, '________')
 	</select>
-	
-	<select id="selectDongAvgDealAmount" parameterType="string" resultType="string">
-		select avg(hd.dealAmount)
-		from houseinfo hi, housedeal hd
-		where hi.aptCode = hd.aptCode and hi.dongCode = #{addrCode}
-	</select>
-	<select id="selectGugunAvgDealAmount" parameterType="string" resultType="string">
-		select avg(hd.dealAmount)
-		from houseinfo hi, housedeal hd
-		where hi.aptCode = hd.aptCode and hi.sigunguCode = #{addrCode}
-	</select>
-	<select id="selectSidoAvgDealAmount" parameterType="string" resultType="string">
-		select avg(hd.dealAmount)
-		from houseinfo hi, housedeal hd
-		where substring(hi.dongCode, 1, 2) = #{addrCode} and hi.aptCode = hd.aptCode
-	</select>
+
+
 </mapper>

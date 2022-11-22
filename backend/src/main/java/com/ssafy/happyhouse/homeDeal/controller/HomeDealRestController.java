@@ -37,40 +37,6 @@ public class HomeDealRestController {
 		this.service = service;
 	}
 
-	@GetMapping(value = "/{year}/{month}/{regcode}")
-	public ResponseEntity<?> selectHouseDeal(@PathVariable String regcode, @PathVariable int year,
-			@PathVariable int month) {
-		try {
-			HashMap<String, Object> map = new HashMap<String, Object>();
-			map.put("regcode", regcode);
-			map.put("year", year);
-			map.put("month", month);
-			List<HomeDealDto> list = service.selectHouseDeal(map);
-			logger.info("list {}", list);
-			if (list != null && !list.isEmpty()) {
-				return new ResponseEntity<List<HomeDealDto>>(list, HttpStatus.OK);
-			} else {
-				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-			}
-		} catch (Exception e) {
-			return exceptionHandling(e);
-		}
-	}
-
-	@GetMapping(value = "/{regcode}")
-	public ResponseEntity<?> selectHouseInfo(@PathVariable String regcode) {
-		try {
-			List<HomeDealDto> list = service.selectHouseInfo(regcode);
-			if (list != null && !list.isEmpty()) {
-				return new ResponseEntity<List<HomeDealDto>>(list, HttpStatus.OK);
-			} else {
-				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-			}
-		} catch (Exception e) {
-			return exceptionHandling(e);
-		}
-	}
-
 	@GetMapping("/{lat1}/{lng1}/{lat2}/{lng2}/{level}")
 	public ResponseEntity<?> selectHouseInfo(@PathVariable String lat1, @PathVariable String lng1,
 			@PathVariable String lat2, @PathVariable String lng2, @PathVariable int level) {
@@ -91,7 +57,6 @@ public class HomeDealRestController {
 				// 도
 				resultMap = service.selectAreaSidoHouseInfo(lat1, lng1, lat2, lng2);
 			}
-
 			return new ResponseEntity<List<Map<String, Object>>>(resultMap, HttpStatus.OK);
 		} catch (Exception e) {
 			return exceptionHandling(e);
@@ -110,6 +75,17 @@ public class HomeDealRestController {
 			} else if (type == 2) {
 				resultMap = service.selectSidoHouseInfo(addrCode);
 			}
+			return new ResponseEntity<List<Map<String, Object>>>(resultMap, HttpStatus.OK);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+	
+	@GetMapping("/{aptCode}")
+	public ResponseEntity<?> selectAptInfo(@PathVariable String aptCode) {
+		try {
+			List<Map<String, Object>> resultMap = service.selectHomeDeal(aptCode);
+			
 			return new ResponseEntity<List<Map<String, Object>>>(resultMap, HttpStatus.OK);
 		} catch (Exception e) {
 			return exceptionHandling(e);

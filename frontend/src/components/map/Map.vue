@@ -1,14 +1,21 @@
 <template>
-  <div id="map"></div>
+  <b-row id="map-container" class="d-flex">
+    <div id="map"></div>
+    <map-sidebar></map-sidebar>
+  </b-row>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import MapSidebar from "./MapSidebar.vue";
 
 const mapStore = "mapStore";
 
 export default {
   name: "Map",
+  components: {
+    MapSidebar,
+  },
   data() {
     return {
       map: null,
@@ -32,10 +39,16 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(mapStore, ["aptList"]),
+    ...mapGetters(mapStore, ["aptList", "isSidebarOpen"]),
   },
   methods: {
-    ...mapActions(mapStore, ["getAptList", "sidebarToggle", "getAddrAptList", "closeSidebar"]),
+    ...mapActions(mapStore, [
+      "getAptList",
+      "getAddrAptList",
+      "getHomeDeal",
+      "openSidebar",
+      "closeSidebar",
+    ]),
     initMap() {
       const container = document.getElementById("map");
       const options = {
@@ -50,6 +63,8 @@ export default {
       });
       kakao.maps.event.addListener(this.map, "dragend", () => {
         this.checkArea();
+        this.closeSidebar();
+        this.close();
       });
     },
     checkArea() {
@@ -69,24 +84,44 @@ export default {
       const lng2 = ne.La;
 
       const level = this.map.getLevel();
-
       await this.getAptList({ lat1, lng1, lat2, lng2, level });
 
       if (level < 5) {
+        const imgSrc = require("@/assets/apt.png");
         this.aptList.map((apt) => {
-          const marker = new kakao.maps.Marker({
+          const aptInfo = document.createElement("div");
+          aptInfo.className = "text-center marker";
+          aptInfo.innerHTML = `
+            <span class="bg-secondary text-white rounded p-1">${this.convertUnit(apt.avg)}억</span>
+            <img class="d-block mx-auto" src=${imgSrc} width="48" height="48"/>
+            <span class="bg-dark text-white p-1 rounded" style="font-size: 10px">${
+              apt.apartmentName
+            }</span>
+          `;
+          aptInfo.addEventListener("click", () => {
+            this.markerClick(apt, "apt");
+          });
+          const marker = new kakao.maps.CustomOverlay({
             map: this.map,
             position: new kakao.maps.LatLng(apt.lat, apt.lng),
+            content: aptInfo,
           });
           this.markers.push(marker);
         });
       } else {
         this.aptList.map((apt) => {
           const test = document.createElement("div");
-          test.className = "areaMarker";
-          test.innerText = apt.addrName;
+          test.className = "areaMarker marker";
+          test.innerHTML = `
+          <div>${apt.addrName}</div>
+          `;
+          if (level < 7) {
+            test.innerHTML += `
+            <div>${this.convertUnit(apt.avg)}억</div>
+            `;
+          }
           test.addEventListener("click", () => {
-            this.addrClick(apt);
+            this.markerClick(apt, "addr");
           });
           const marker = new kakao.maps.CustomOverlay({
             map: this.map,
@@ -103,32 +138,63 @@ export default {
         this.markers[i].setMap(null);
       }
     },
-    addrClick(addr) {
-      this.map.panTo(new kakao.maps.LatLng(addr.lat, addr.lng));
-      this.getAddrAptList(addr.addrCode);
-      this.sidebarToggle(addr);
+    markerClick(marker, type) {
+      marker.type = type;
+      this.openSidebar({
+        marker: marker,
+        open: this.open,
+      });
+      this.map.setCenter(new kakao.maps.LatLng(marker.lat, marker.lng));
+      this.checkArea();
+      if (type === "addr") {
+        this.getAddrAptList(marker.addrCode);
+      } else if (type === "apt") {
+        this.getHomeDeal(marker.aptCode);
+      }
+    },
+    convertUnit(price) {
+      return (parseInt(price) / 10000).toFixed(1);
+    },
+    open() {
+      const mapDiv = document.querySelector("#map");
+      if (mapDiv) {
+        mapDiv.style.width = "calc(100% - 360px)";
+        this.map.relayout();
+      }
+    },
+    close() {
+      const mapDiv = document.querySelector("#map");
+      if (mapDiv) {
+        mapDiv.style.width = "100%";
+        this.map.relayout();
+      }
     },
   },
 };
 </script>
 
 <style>
+#map-container {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
 #map {
   width: 100%;
   height: 100%;
 }
 
 .areaMarker {
-  padding: 10px;
+  padding: 15px;
   background-color: #646464;
   color: white;
   text-align: center;
-  border-radius: 40%;
+  border-radius: 50%;
   display: table-cell;
   vertical-align: middle;
 }
 
-.areaMarker:hover {
+.marker:hover {
   cursor: pointer;
 }
 </style>

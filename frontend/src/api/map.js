@@ -13,4 +13,8 @@ async function doGetAddrAptList(addrCode, success, fail) {
   await api.get(`/homedeal/apt-info/addr/${addrCode}`).then(success).catch(fail);
 }
 
-export { doGetAptList, doGetAddrAptList };
+async function doGetHomeDeal(aptCode, success, fail) {
+  await api.get(`/homedeal/${aptCode}`).then(success).catch(fail);
+}
+
+export { doGetAptList, doGetAddrAptList, doGetHomeDeal };

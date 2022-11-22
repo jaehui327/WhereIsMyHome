@@ -1,25 +1,26 @@
-import { doGetAptList, doGetAddrAptList } from "@/api/map";
+import { doGetAptList, doGetAddrAptList, doGetHomeDeal } from "@/api/map";
 
 const mapStore = {
   namespaced: true,
   state: {
     aptList: [],
-    addrAptList: [],
     isSidebarOpen: false,
     selectedAddr: null,
+    selectedHomeDeal: [],
   },
   getters: {
     aptList: (state) => {
       return state.aptList;
     },
-    addrAptList: (state) => {
-      return state.addrAptList;
-    },
+
     isSidebarOpen: (state) => {
       return state.isSidebarOpen;
     },
     selectedAddr: (state) => {
       return state.selectedAddr;
+    },
+    selectedHomeDeal: (state) => {
+      return state.selectedHomeDeal;
     },
   },
   mutations: {
@@ -32,8 +33,8 @@ const mapStore = {
     SET_SELECTED_ADDR(state, addr) {
       state.selectedAddr = addr;
     },
-    SET_ADDR_APT_LIST(state, addrAptList) {
-      state.addrAptList = addrAptList;
+    SET_SELECTED_HOMEDEAL(state, homedeal) {
+      state.selectedHomeDeal = homedeal;
     },
   },
   actions: {
@@ -41,7 +42,6 @@ const mapStore = {
       await doGetAptList(
         area,
         ({ data }) => {
-          console.log(data);
           commit("SET_APT_LIST", data);
         },
         (error) => {
@@ -49,33 +49,52 @@ const mapStore = {
         }
       );
     },
-    sidebarToggle({ state, commit }, addr) {
-      if (state.isSidebarOpen) {
-        if (state.selectedAddr.addrCode === addr.addrCode) {
-          commit("SET_IS_SIDEBAR_OPEN", false);
-          commit("SET_SELECTED_ADDR", null);
-        } else {
-          commit("SET_SELECTED_ADDR", addr);
-        }
-      } else {
-        commit("SET_IS_SIDEBAR_OPEN", true);
-        commit("SET_SELECTED_ADDR", addr);
-      }
+    openSidebar({ commit }, { marker, open }) {
+      open();
+      commit("SET_IS_SIDEBAR_OPEN", true);
+      commit("SET_SELECTED_ADDR", marker);
     },
     closeSidebar({ commit }) {
       commit("SET_IS_SIDEBAR_OPEN", false);
       commit("SET_SELECTED_ADDR", null);
     },
+
     async getAddrAptList({ commit }, addrCode) {
       await doGetAddrAptList(
         addrCode,
         ({ data }) => {
-          commit("SET_ADDR_APT_LIST", data);
+          commit("SET_SELECTED_HOMEDEAL", data);
         },
         (error) => {
           console.log(error);
         }
       );
+    },
+
+    async getHomeDeal({ commit }, aptCode) {
+      await doGetHomeDeal(
+        aptCode,
+        ({ data }) => {
+          data.sort((a, b) => {
+            if (
+              `${a.dealYear}.${a.dealMonth}.${a.dealDay}` >
+              `${b.dealYear}.${b.dealMonth}.${b.dealDay}`
+            ) {
+              return -1;
+            } else {
+              return 1;
+            }
+          });
+          commit("SET_SELECTED_HOMEDEAL", data);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+    addrAptClick({ commit }, aptCode) {
+      console.log(commit);
+      console.log(aptCode);
     },
   },
 };

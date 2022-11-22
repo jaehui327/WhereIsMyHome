@@ -23,16 +23,6 @@ public class HomeDealServiceImpl implements HomeDealService {
 	}
 
 	@Override
-	public List<HomeDealDto> selectHouseDeal(Map<String, Object> map) throws SQLException {
-		return mapper.selectHouseDeal(map);
-	}
-
-	@Override
-	public List<HomeDealDto> selectHouseInfo(String regcode) throws SQLException {
-		return mapper.selectHouseInfo(regcode);
-	}
-
-	@Override
 	public List<HouseInfoDto> selectHouseInfo(String lat1, String lng1, String lat2, String lng2) throws SQLException {
 		return mapper.selectAreaHouseInfo(lat1, lng1, lat2, lng2);
 	}
@@ -77,17 +67,9 @@ public class HomeDealServiceImpl implements HomeDealService {
 	}
 
 	@Override
-	public String selectAreaAvgDealAmount(String addrCode) throws SQLException {
+	public List<Map<String, Object>> selectHomeDeal(String aptCode) throws SQLException {
 		// TODO Auto-generated method stub
-		String ret = "";
-		if (addrCode.length() == 10) {
-			ret = mapper.selectDongAvgDealAmount(addrCode);
-		} else if (addrCode.length() == 5) {
-			ret = mapper.selectGugunAvgDealAmount(addrCode);
-		} else if (addrCode.length() == 2) {
-			ret = mapper.selectSidoAvgDealAmount(addrCode);
-		}
-		return ret;
+		return mapper.selectHomeDeal(aptCode);
 	}
 
 }
