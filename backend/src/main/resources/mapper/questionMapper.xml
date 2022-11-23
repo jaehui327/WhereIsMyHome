@@ -11,12 +11,7 @@
 		from
 		questions
 		<if test="word != null and word != ''">
-			<if test="key == 'title'">
-				where title like concat('%', #{word}, '%')
-			</if>
-			<if test="key != 'title'">
-				where ${key} = #{word}
-			</if>
+			where title like concat('%', #{word}, '%')
 		</if>
 		order by question_no desc
 		limit #{start}, #{spp}
@@ -26,12 +21,7 @@
 		select count(question_no)
 		from questions
 		<if test="word != null and word != ''">
-			<if test="key == 'title'">
-				where title like concat('%', #{word}, '%')
-			</if>
-			<if test="key != 'title'">
-				where ${key} = #{word}
-			</if>
+			where title like concat('%', #{word}, '%')
 		</if>
 	</select>
 
