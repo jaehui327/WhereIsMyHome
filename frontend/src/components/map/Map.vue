@@ -1,5 +1,6 @@
 <template>
   <b-row id="map-container" class="d-flex">
+    <map-header @search="search" />
     <div id="map"></div>
     <map-sidebar></map-sidebar>
   </b-row>
@@ -7,7 +8,8 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import MapSidebar from "./MapSidebar.vue";
+import MapSidebar from "@/components/map/MapSidebar";
+import MapHeader from "@/components/map/MapHeader";
 
 const mapStore = "mapStore";
 
@@ -15,6 +17,7 @@ export default {
   name: "Map",
   components: {
     MapSidebar,
+    MapHeader,
   },
   data() {
     return {
@@ -22,6 +25,7 @@ export default {
       markers: [],
       ps: null,
       placeMarkers: [],
+      gc: null,
     };
   },
   created() {
@@ -83,6 +87,7 @@ export default {
       };
       this.map = new kakao.maps.Map(container, options);
       this.ps = new kakao.maps.services.Places(this.map);
+      this.gc = new kakao.maps.services.Geocoder();
 
       this.checkArea();
       kakao.maps.event.addListener(this.map, "zoom_changed", () => {
@@ -269,6 +274,16 @@ export default {
         });
         this.placeMarkers.push(marker);
       });
+    },
+    addressSearch(result, status) {
+      if (status === kakao.maps.services.Status.OK) {
+        this.map.setCenter(new kakao.maps.LatLng(result[0].y, result[0].x));
+        this.map.setLevel(3);
+        this.checkArea();
+      }
+    },
+    search(word) {
+      this.gc.addressSearch(word, this.addressSearch);
     },
   },
 };

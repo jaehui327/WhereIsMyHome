@@ -7,6 +7,7 @@ import questionStore from "@/store/modules/questionStore";
 import answerStore from "@/store/modules/answerStore";
 import mapStore from "@/store/modules/mapStore";
 import noticeStore from "@/store/modules/noticeStore";
+import newsStore from "@/store/modules/newsStore";
 
 Vue.use(Vuex);
 
@@ -17,6 +18,7 @@ export default new Vuex.Store({
     answerStore,
     mapStore,
     noticeStore,
+    newsStore,
   },
   plugins: [
     createPersistedState({

@@ -1,4 +1,4 @@
-package com.ssafy.happyhouse.util;
+package com.ssafy.happyhouse.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
-@Slf4j
 @Configuration						// 빈 등록
 @RequiredArgsConstructor
 @PropertySource("classpath:properties/env.properties") 		

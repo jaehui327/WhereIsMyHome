@@ -2,8 +2,8 @@ import { apiInstance } from ".";
 
 const api = apiInstance();
 
-async function doCrawlNews(success, fail) {
+async function doCrawlNewsList(success, fail) {
   await api.get(`/news`).then(success).catch(fail);
 }
 
-export { doCrawlNews };
+export { doCrawlNewsList };

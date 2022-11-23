@@ -2,13 +2,9 @@
   <div id="map-header" class="m-4 d-flex bg-dark rounded">
     <b-input-group class="p-3">
       <template #append>
-        <b-button variant="secondary"><b-icon icon="search"></b-icon></b-button>
+        <b-button variant="secondary" @click="search"><b-icon icon="search"></b-icon></b-button>
       </template>
-      <b-form-input
-        id="type-search"
-        placeholder="아파트, 지역 검색"
-        v-model="search"
-      ></b-form-input>
+      <b-form-input id="type-search" placeholder="지역 검색" v-model="word"></b-form-input>
     </b-input-group>
     <div class="p-2">
       <b-form-checkbox-group
@@ -28,9 +24,10 @@ const mapStore = "mapStore";
 
 export default {
   name: "MapHeader",
+
   data() {
     return {
-      search: "",
+      word: "",
       selected: [],
       options: [
         { text: "대형마트", value: "MT1" },
@@ -54,6 +51,10 @@ export default {
     ...mapActions(mapStore, ["setSelectedCategory"]),
     select() {
       this.setSelectedCategory(this.selected);
+    },
+    search() {
+      this.$emit("search", this.word);
+      this.word = "";
     },
   },
 };
