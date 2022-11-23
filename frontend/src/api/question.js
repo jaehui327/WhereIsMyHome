@@ -2,8 +2,8 @@ import { apiInstance } from ".";
 
 const api = apiInstance();
 
-async function doGetQuestionList(success, fail) {
-  await api.get(`/question`).then(success).catch(fail);
+async function doGetQuestionList(param, success, fail) {
+  await api.get(`/question`, { params: param }).then(success).catch(fail);
 }
 
 async function doGetQuestion(questionNo, success, fail) {
