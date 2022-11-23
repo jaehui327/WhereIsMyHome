@@ -1,6 +1,7 @@
 package com.ssafy.happyhouse.question.model.service;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.happyhouse.question.model.QuestionDto;
+import com.ssafy.happyhouse.question.model.SearchDto;
 import com.ssafy.happyhouse.question.model.mapper.QuestionMapper;
 
 @Service
@@ -17,8 +19,18 @@ public class QuestionServiceImpl implements QuestionService {
 	private QuestionMapper mapper;
 
 	@Override
-	public List<QuestionDto> selectAllQuestion() throws SQLException {
-		return mapper.selectAllQuestion();
+	public Map<String, Object> selectAllQuestion(SearchDto searchDto) throws SQLException {
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		int start = searchDto.getPg() == 0 ? 0 : (searchDto.getPg() - 1) * searchDto.getSpp();
+		searchDto.setStart(start);
+		List<QuestionDto> questions = mapper.selectAllQuestion(searchDto);
+		map.put("questions", questions);
+		
+		int totalCnt = mapper.getTotalCnt(searchDto);
+		map.put("totalCnt", totalCnt);
+		
+		return map;
 	}
 
 	@Override

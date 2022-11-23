@@ -1,23 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ssafy.happyhouse.question.model.mapper.QuestionMapper">
+<mapper
+	namespace="com.ssafy.happyhouse.question.model.mapper.QuestionMapper">
 
-	<select id="selectAllQuestion"
+	<select id="selectAllQuestion" parameterType="map"
 		resultType="com.ssafy.happyhouse.question.model.QuestionDto">
-		select question_no as no, user_id as userId, title, content, create_time as createTime, update_time as updateTime, hit
-		from questions
+		select question_no as no, user_id as userId, title, content,
+		create_time as createTime, update_time as updateTime, hit
+		from
+		questions
+		<if test="word != null and word != ''">
+			<if test="key == 'title'">
+				where title like concat('%', #{word}, '%')
+			</if>
+			<if test="key != 'title'">
+				where ${key} = #{word}
+			</if>
+		</if>
 		order by question_no desc
+		limit #{start}, #{spp}
+	</select>
+
+	<select id="getTotalCnt" parameterType="map" resultType="int">
+		select count(question_no)
+		from questions
+		<if test="word != null and word != ''">
+			<if test="key == 'title'">
+				where title like concat('%', #{word}, '%')
+			</if>
+			<if test="key != 'title'">
+				where ${key} = #{word}
+			</if>
+		</if>
 	</select>
 
 	<select id="selectByNo" parameterType="int"
 		resultType="com.ssafy.happyhouse.question.model.QuestionDto">
-		select question_no as `no`, user_id as userId, title, content, create_time as createTime, update_time as updateTime, hit
+		select question_no as `no`, user_id as userId, title,
+		content, create_time as createTime, update_time as updateTime, hit
 		from questions where question_no = #{no}
 	</select>
 
 	<insert id="insertQuestion" parameterType="map">
-		insert into questions(user_id, title, content) values(#{userId}, #{title}, #{content})
+		insert into
+		questions(user_id, title, content) values(#{userId}, #{title},
+		#{content})
 	</insert>
 
 	<update id="updateQuestion" parameterType="map">
@@ -29,13 +57,15 @@
 		</trim>
 		where question_no = #{no}
 	</update>
-	
+
 	<update id="updateHit" parameterType="int">
-		update questions set hit = hit + 1 where question_no = #{no}
+		update questions set hit =
+		hit + 1 where question_no = #{no}
 	</update>
 
 	<delete id="deleteQuestion" parameterType="int">
-		delete from questions where question_no = #{no}
+		delete from questions
+		where question_no = #{no}
 	</delete>
 
 </mapper>

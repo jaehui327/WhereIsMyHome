@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.happyhouse.question.model.QuestionDto;
+import com.ssafy.happyhouse.question.model.SearchDto;
 import com.ssafy.happyhouse.question.model.service.QuestionService;
 
 import io.swagger.annotations.Api;
@@ -36,12 +37,12 @@ public class QuestionRestController {
 	QuestionService service;
 
 	@GetMapping()
-	public ResponseEntity<?> selectAllQuestion() {
+	public ResponseEntity<?> selectAllQuestion(SearchDto searchDto) {
 		try {
-			logger.debug("listQuestion - {}", service.selectAllQuestion());
-			List<QuestionDto> list = service.selectAllQuestion();
-			if (list != null && !list.isEmpty()) {
-				return new ResponseEntity<List<QuestionDto>>(list, HttpStatus.OK);
+			logger.debug("listQuestion - {}", service.selectAllQuestion(searchDto));
+			Map<String, Object> map = service.selectAllQuestion(searchDto);
+			if (map.get("questions") != null && !((List<?>) map.get("questions")).isEmpty()) {
+				return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 			}

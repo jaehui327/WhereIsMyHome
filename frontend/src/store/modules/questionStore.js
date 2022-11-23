@@ -1,16 +1,11 @@
-import {
-  doGetQuestionList,
-  doGetQuestion,
-  doWriteQuestion,
-  doModifyQuestion,
-  doRemoveQuestion,
-} from "@/api/question";
+import { doGetQuestionList, doGetQuestion, doWriteQuestion, doModifyQuestion, doRemoveQuestion } from "@/api/question";
 
 const questionStore = {
   namespaced: true,
   state: {
     questionList: [],
     question: null,
+    totalCnt: 0,
   },
   getters: {
     questionList(state) {
@@ -18,6 +13,9 @@ const questionStore = {
     },
     question(state) {
       return state.question;
+    },
+    totalCnt(state) {
+      return state.totalCnt;
     },
   },
   mutations: {
@@ -27,12 +25,17 @@ const questionStore = {
     SET_QUESTION(state, question) {
       state.question = question;
     },
+    SET_TOTALCNT(state, totalCnt) {
+      state.totalCnt = totalCnt;
+    },
   },
   actions: {
-    async getQuestionList({ commit }) {
+    async getQuestionList({ commit }, param) {
       await doGetQuestionList(
+        param,
         ({ data }) => {
-          commit("SET_QUESTION_LIST", data);
+          commit("SET_QUESTION_LIST", data.questions);
+          commit("SET_TOTALCNT", data.totalCnt);
         },
         (error) => {
           console.log(error);
