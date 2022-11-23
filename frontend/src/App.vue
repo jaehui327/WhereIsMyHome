@@ -32,5 +32,6 @@ body,
   width: 100%;
   height: auto;
   min-height: calc(100% - 433.49px);
+  min-width: 960px;
 }
 </style>

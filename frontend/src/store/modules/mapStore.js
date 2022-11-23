@@ -7,6 +7,7 @@ const mapStore = {
     isSidebarOpen: false,
     selectedAddr: null,
     selectedHomeDeal: [],
+    selectedCategory: [],
   },
   getters: {
     aptList: (state) => {
@@ -22,6 +23,9 @@ const mapStore = {
     selectedHomeDeal: (state) => {
       return state.selectedHomeDeal;
     },
+    selectedCategory: (state) => {
+      return state.selectedCategory;
+    },
   },
   mutations: {
     SET_APT_LIST(state, aptList) {
@@ -35,6 +39,9 @@ const mapStore = {
     },
     SET_SELECTED_HOMEDEAL(state, homedeal) {
       state.selectedHomeDeal = homedeal;
+    },
+    SET_SELECTED_CATEGORY(state, selectedCategory) {
+      state.selectedCategory = selectedCategory;
     },
   },
   actions: {
@@ -92,9 +99,13 @@ const mapStore = {
       );
     },
     async addrAptClick({ commit, dispatch }, apt) {
+      dispatch("closeSidebar");
       await dispatch("getHomeDeal", apt.aptCode);
       apt.type = "apt";
       commit("SET_SELECTED_ADDR", apt);
+    },
+    setSelectedCategory({ commit }, selectedCategory) {
+      commit("SET_SELECTED_CATEGORY", selectedCategory);
     },
   },
 };

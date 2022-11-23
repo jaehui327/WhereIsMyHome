@@ -62,7 +62,7 @@
         </b-table-simple>
       </b-collapse>
       <b-list-group v-for="(aptInfo, index) in selectedHomeDeal" :key="index">
-        <b-list-group-item @click="clickApt(aptInfo.aptCode)" class="d-flex">
+        <b-list-group-item @click="clickApt(aptInfo.aptCode)" class="d-flex map-sidebar-list-item">
           <img
             :src="require(`@/assets/apt/${Math.floor(Math.random() * 20) + 1}.png`)"
             width="80"
@@ -165,5 +165,9 @@ export default {
 
 #map-sidebar-header {
   width: 100%;
+}
+
+.map-sidebar-list-item:hover {
+  cursor: pointer;
 }
 </style>

@@ -20,6 +20,8 @@ export default {
     return {
       map: null,
       markers: [],
+      ps: null,
+      placeMarkers: [],
     };
   },
   created() {
@@ -40,9 +42,16 @@ export default {
   },
   watch: {
     selectedAddr: "centerChange",
+    isSidebarOpen: "isSidebarOpenChange",
+    changedSelectedCategory(value) {
+      this.searchPlaces(value);
+    },
   },
   computed: {
-    ...mapGetters(mapStore, ["selectedAddr", "aptList", "isSidebarOpen"]),
+    ...mapGetters(mapStore, ["selectedAddr", "aptList", "isSidebarOpen", "selectedCategory"]),
+    changedSelectedCategory: function () {
+      return this.selectedCategory;
+    },
   },
   methods: {
     ...mapActions(mapStore, [
@@ -52,10 +61,15 @@ export default {
       "openSidebar",
       "closeSidebar",
     ]),
+    isSidebarOpenChange() {
+      if (!this.isSidebarOpen) {
+        this.close();
+      }
+    },
     centerChange() {
       if (this.selectedAddr) {
         if (this.selectedAddr.type === "apt") {
-          this.map.setLevel(2);
+          this.map.setLevel(1);
         }
         this.map.setCenter(new kakao.maps.LatLng(this.selectedAddr.lat, this.selectedAddr.lng));
         this.checkArea();
@@ -68,6 +82,7 @@ export default {
         level: 3,
       };
       this.map = new kakao.maps.Map(container, options);
+      this.ps = new kakao.maps.services.Places(this.map);
 
       this.checkArea();
       kakao.maps.event.addListener(this.map, "zoom_changed", () => {
@@ -80,6 +95,8 @@ export default {
       });
     },
     checkArea() {
+      this.removePlaceMarkers();
+      this.searchPlaces(this.selectedCategory);
       this.removeMarker();
       this.viewMarker();
     },
@@ -149,6 +166,7 @@ export default {
       for (let i = 0; i < this.markers.length; i++) {
         this.markers[i].setMap(null);
       }
+      this.markers = [];
     },
     markerClick(marker, type) {
       marker.type = type;
@@ -156,8 +174,6 @@ export default {
         marker: marker,
         open: this.open,
       });
-      // this.map.setCenter(new kakao.maps.LatLng(marker.lat, marker.lng));
-      // this.checkArea();
       if (type === "addr") {
         this.getAddrAptList(marker.addrCode);
       } else if (type === "apt") {
@@ -171,15 +187,88 @@ export default {
       const mapDiv = document.querySelector("#map");
       if (mapDiv) {
         mapDiv.style.width = "calc(100% - 440px)";
-        this.map.relayout();
+        this.map?.relayout();
       }
     },
     close() {
       const mapDiv = document.querySelector("#map");
       if (mapDiv) {
         mapDiv.style.width = "100%";
-        this.map.relayout();
+        this.map?.relayout();
       }
+    },
+    removePlaceMarkers() {
+      for (let i = 0; i < this.placeMarkers.length; i++) {
+        this.placeMarkers[i].setMap(null);
+      }
+      this.placeMarkers = [];
+    },
+    searchPlaces(sc) {
+      this.removePlaceMarkers();
+
+      if (!sc || sc.length === 0) {
+        return;
+      }
+
+      sc.map((category) => {
+        this.ps.categorySearch(category, this.placesSearchCB, { useMapBounds: true });
+      });
+    },
+    placesSearchCB(data, status, pagination) {
+      if (status === kakao.maps.services.Status.OK) {
+        this.viewPlaceMarkers(data);
+        pagination.nextPage();
+      }
+    },
+    viewPlaceMarkers(places) {
+      if (!places) {
+        return;
+      }
+      let imgSrc;
+      let bgColor;
+      const code = places[0].category_group_code;
+
+      if (code === "MT1") {
+        imgSrc = require("@/assets/mart.png");
+        bgColor = "#f2b712";
+      } else if (code === "PS3") {
+        imgSrc = require("@/assets/kindergarden.png");
+        bgColor = "#f95904";
+      } else if (code === "SC4") {
+        imgSrc = require("@/assets/school.png");
+        bgColor = "#209414";
+      } else if (code === "SW8") {
+        imgSrc = require("@/assets/subway.png");
+        bgColor = "#ce1f0a";
+      } else if (code === "FD6") {
+        imgSrc = require("@/assets/restaurant.png");
+        bgColor = "#4cd4b7";
+      } else if (code === "CE7") {
+        imgSrc = require("@/assets/cafe.png");
+        bgColor = "#624429";
+      } else if (code === "HP8") {
+        imgSrc = require("@/assets/hospital.png");
+        bgColor = "#60c1f3";
+      } else if (code === "PM9") {
+        imgSrc = require("@/assets/pharmacy.png");
+        bgColor = "#e5748d";
+      }
+      places.map((place) => {
+        const placeInfo = document.createElement("div");
+        placeInfo.className = "text-center marker";
+        placeInfo.innerHTML = `
+          <img class='d-block mx-auto' src=${imgSrc} width='36' height='36' />
+          <span class='text-white p-1 rounded' style='font-size: 10px; background-color: ${bgColor};'>
+            ${place.place_name}
+          </span>
+        `;
+        const marker = new kakao.maps.CustomOverlay({
+          map: this.map,
+          position: new kakao.maps.LatLng(place.y, place.x),
+          content: placeInfo,
+        });
+        this.placeMarkers.push(marker);
+      });
     },
   },
 };
