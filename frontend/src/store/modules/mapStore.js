@@ -70,7 +70,6 @@ const mapStore = {
         }
       );
     },
-
     async getHomeDeal({ commit }, aptCode) {
       await doGetHomeDeal(
         aptCode,
@@ -92,9 +91,10 @@ const mapStore = {
         }
       );
     },
-    addrAptClick({ commit }, aptCode) {
-      console.log(commit);
-      console.log(aptCode);
+    async addrAptClick({ commit, dispatch }, apt) {
+      await dispatch("getHomeDeal", apt.aptCode);
+      apt.type = "apt";
+      commit("SET_SELECTED_ADDR", apt);
     },
   },
 };

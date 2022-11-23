@@ -38,8 +38,11 @@ export default {
       this.initMap();
     }
   },
+  watch: {
+    selectedAddr: "centerChange",
+  },
   computed: {
-    ...mapGetters(mapStore, ["aptList", "isSidebarOpen"]),
+    ...mapGetters(mapStore, ["selectedAddr", "aptList", "isSidebarOpen"]),
   },
   methods: {
     ...mapActions(mapStore, [
@@ -49,6 +52,15 @@ export default {
       "openSidebar",
       "closeSidebar",
     ]),
+    centerChange() {
+      if (this.selectedAddr) {
+        if (this.selectedAddr.type === "apt") {
+          this.map.setLevel(2);
+        }
+        this.map.setCenter(new kakao.maps.LatLng(this.selectedAddr.lat, this.selectedAddr.lng));
+        this.checkArea();
+      }
+    },
     initMap() {
       const container = document.getElementById("map");
       const options = {
@@ -110,23 +122,23 @@ export default {
         });
       } else {
         this.aptList.map((apt) => {
-          const test = document.createElement("div");
-          test.className = "areaMarker marker";
-          test.innerHTML = `
+          const area = document.createElement("div");
+          area.className = "areaMarker marker";
+          area.innerHTML = `
           <div>${apt.addrName}</div>
           `;
           if (level < 7) {
-            test.innerHTML += `
+            area.innerHTML += `
             <div>${this.convertUnit(apt.avg)}억</div>
             `;
+            area.addEventListener("click", () => {
+              this.markerClick(apt, "addr");
+            });
           }
-          test.addEventListener("click", () => {
-            this.markerClick(apt, "addr");
-          });
           const marker = new kakao.maps.CustomOverlay({
             map: this.map,
             position: new kakao.maps.LatLng(apt.lat, apt.lng),
-            content: test,
+            content: area,
           });
 
           this.markers.push(marker);
@@ -144,8 +156,8 @@ export default {
         marker: marker,
         open: this.open,
       });
-      this.map.setCenter(new kakao.maps.LatLng(marker.lat, marker.lng));
-      this.checkArea();
+      // this.map.setCenter(new kakao.maps.LatLng(marker.lat, marker.lng));
+      // this.checkArea();
       if (type === "addr") {
         this.getAddrAptList(marker.addrCode);
       } else if (type === "apt") {
@@ -158,7 +170,7 @@ export default {
     open() {
       const mapDiv = document.querySelector("#map");
       if (mapDiv) {
-        mapDiv.style.width = "calc(100% - 360px)";
+        mapDiv.style.width = "calc(100% - 440px)";
         this.map.relayout();
       }
     },

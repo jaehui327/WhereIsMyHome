@@ -62,10 +62,17 @@
         </b-table-simple>
       </b-collapse>
       <b-list-group v-for="(aptInfo, index) in selectedHomeDeal" :key="index">
-        <b-list-group-item @click="test(aptInfo.aptCode)">
-          <p class="font-weight-bold">{{ aptInfo.apartmentName }}</p>
-          <span class="ml-auto">
-            {{ address(aptInfo.roadName, aptInfo.roadNameBonbun, aptInfo.roadNameBubun) }}
+        <b-list-group-item @click="clickApt(aptInfo.aptCode)" class="d-flex">
+          <img
+            :src="require(`@/assets/apt/${Math.floor(Math.random() * 20) + 1}.png`)"
+            width="80"
+            height="80"
+          />
+          <span class="p-2">
+            <p class="font-weight-bold">{{ aptInfo.apartmentName }}</p>
+            <span class="ml-auto">
+              {{ address(aptInfo.roadName, aptInfo.roadNameBonbun, aptInfo.roadNameBubun) }}
+            </span>
           </span>
         </b-list-group-item>
       </b-list-group>
@@ -85,6 +92,7 @@ export default {
       isDetailOpen: false,
     };
   },
+
   filters: {
     dealPrice(price) {
       if (!price) return;
@@ -110,7 +118,7 @@ export default {
     selectedAddr: "closeDetail",
   },
   methods: {
-    ...mapActions[(mapStore, ["addrAptClick"])],
+    ...mapActions(mapStore, ["addrAptClick"]),
     closeDetail() {
       this.isDetailOpen = false;
     },
@@ -127,8 +135,13 @@ export default {
       }
       return addr;
     },
-    test(aptCode) {
-      this.addrAptClick(aptCode);
+    clickApt(aptCode) {
+      for (let i = 0; i < this.selectedHomeDeal.length; i++) {
+        if (this.selectedHomeDeal[i].aptCode === aptCode) {
+          this.addrAptClick(this.selectedHomeDeal[i]);
+          return;
+        }
+      }
     },
   },
 };
@@ -136,7 +149,7 @@ export default {
 
 <style scoped>
 #map-sidebar {
-  width: 360px;
+  width: 440px;
   height: 100%;
   z-index: 3;
   overflow: auto;
