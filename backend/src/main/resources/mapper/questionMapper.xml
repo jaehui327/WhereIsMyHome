@@ -11,7 +11,7 @@
 		from
 		questions
 		<if test="word != null and word != ''">
-			where title like concat('%', #{word}, '%')
+			where ${key} like concat('%', #{word}, '%')
 		</if>
 		order by question_no desc
 		limit #{start}, #{spp}
@@ -21,7 +21,7 @@
 		select count(question_no)
 		from questions
 		<if test="word != null and word != ''">
-			where title like concat('%', #{word}, '%')
+			where ${key} like concat('%', #{word}, '%')
 		</if>
 	</select>
 
