@@ -3,7 +3,7 @@
     <b-row class="m-1">
       <h2 class="p-1">공지사항</h2>
       <div class="ml-auto">
-        <b-button variant="primary" to="/notice/edit/" v-if="userInfo.role === 'admin'"
+        <b-button variant="primary" to="/notice/edit/" v-if="userInfo && userInfo.role === 'admin'"
           >작성하기</b-button
         >
       </div>
