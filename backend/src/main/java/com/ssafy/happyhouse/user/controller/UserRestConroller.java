@@ -1,6 +1,5 @@
 package com.ssafy.happyhouse.user.controller;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -60,7 +58,6 @@ public class UserRestConroller {
 	@PostMapping("/join")
 	private ResponseEntity<?> join(@RequestBody UserDto user) {
 		try {
-			System.out.println(user);
 			user.setPw(SHA256.encodeSha256(user.getPw()));
 			userService.join(user);
 			return new ResponseEntity<Void>(HttpStatus.CREATED);
@@ -76,16 +73,13 @@ public class UserRestConroller {
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = null;
 		try {
-			System.out.println(map);
 			map.put("pw", SHA256.encodeSha256((String) map.get("pw")));
-			System.out.println(map);
 			UserDto user = userService.loginUser(map);
 			logger.info("user 정보 {}", user);
 			if (user != null) {
 				String accessToken = jwtService.createAccessToken("id", user.getId());
 				String refreshToken = jwtService.createRefreshToken("id", user.getId());
 				userService.saveRefreshToken(user.getId(), refreshToken);
-				System.out.println(userService.loginUser(map));
 				
 				logger.debug("로그인 accessToken 정보: {}", accessToken);
 				logger.debug("로그인 refreshToken 정보: {}", refreshToken);
@@ -123,6 +117,7 @@ public class UserRestConroller {
 	@PutMapping()
 	private ResponseEntity<?> update(@RequestBody Map<String, Object> map) {
 		try {
+			map.put("pw", SHA256.encodeSha256((String)map.get("pw")));
 			userService.modify(map);
 			UserDto u = userService.getUser((String) map.get("id"));
 			return new ResponseEntity<UserDto>(u, HttpStatus.OK);

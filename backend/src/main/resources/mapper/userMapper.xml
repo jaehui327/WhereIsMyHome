@@ -33,6 +33,7 @@
 		update users 
 		<trim prefix="set" suffixOverrides=",">
 			<if test="name!= null">user_name = #{name},</if>
+			<if test="pw != null">user_pw = #{pw},</if>
 			<if test="address != null">address = #{address},</if>
 			<if test="tel != null">phone = #{tel},</if>
 		</trim>

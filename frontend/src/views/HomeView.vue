@@ -7,11 +7,17 @@
             <h3>공지사항</h3>
             <b-list-group>
               <b-list-group-item
+                class="d-flex justify-content-between"
                 v-for="notice in noticeList"
                 :key="notice.no"
                 :to="'/notice/view/' + notice.no"
               >
-                {{ notice.title }}
+                <div>
+                  {{ notice.title }}
+                </div>
+                <div>
+                  {{ notice.noticeTime }}
+                </div>
               </b-list-group-item>
             </b-list-group>
           </div>
@@ -44,11 +50,17 @@
             <h3>최근 질문</h3>
             <b-list-group>
               <b-list-group-item
+                class="d-flex justify-content-between"
                 v-for="question in questionList"
                 :key="question.no"
                 :to="'/qna/view/' + question.no"
               >
-                {{ question.title }}
+                <div>
+                  {{ question.title }}
+                </div>
+                <div>
+                  {{ question.createTime }}
+                </div>
               </b-list-group-item>
             </b-list-group>
           </div>

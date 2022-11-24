@@ -1,4 +1,4 @@
-import { login, doRegisterUser, removeUser, modifyUser } from "@/api/user";
+import { login, doRegisterUser, removeUser, modifyUser, doIdCheck } from "@/api/user";
 import router from "@/router";
 
 const userStore = {
@@ -111,6 +111,20 @@ const userStore = {
           console.log(error);
         }
       );
+      return status;
+    },
+    async idCheck(context, userId) {
+      let cnt;
+      await doIdCheck(
+        userId,
+        ({ data }) => {
+          cnt = data;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+      return cnt;
     },
   },
 };
