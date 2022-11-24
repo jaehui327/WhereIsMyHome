@@ -1,4 +1,10 @@
-import { doGetQuestionList, doGetQuestion, doWriteQuestion, doModifyQuestion, doRemoveQuestion } from "@/api/question";
+import {
+  doGetQuestionList,
+  doGetQuestion,
+  doWriteQuestion,
+  doModifyQuestion,
+  doRemoveQuestion,
+} from "@/api/question";
 
 const questionStore = {
   namespaced: true,
@@ -76,15 +82,18 @@ const questionStore = {
       );
     },
     async removeQuestion({ commit }, questionNo) {
+      let status;
       await doRemoveQuestion(
         questionNo,
         ({ data }) => {
           commit("SET_QUESTION_LIST", data);
+          status = 200;
         },
         (error) => {
           console.log(error);
         }
       );
+      return status;
     },
   },
 };

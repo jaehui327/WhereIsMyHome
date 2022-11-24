@@ -78,12 +78,14 @@ export default {
     ...mapGetters(answerStore, ["answerList"]),
   },
   methods: {
-    ...mapActions(questionStore, ["getQuestion"]),
+    ...mapActions(questionStore, ["getQuestion", "removeQuestion"]),
     ...mapActions(answerStore, ["getAnswerList", "writeAnswer"]),
-    ...mapActions(["removeQnA", "getAnswer"]),
-    remove() {
+    async remove() {
       if (confirm("정말 삭제하시겠습니까?")) {
-        this.removeQnA(this.question.no);
+        const status = await this.removeQuestion(this.question.no);
+        if (status === 200) {
+          this.$router.push("/qna/list");
+        }
       }
     },
     write() {

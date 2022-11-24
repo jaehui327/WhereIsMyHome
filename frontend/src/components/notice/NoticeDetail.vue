@@ -48,9 +48,13 @@ export default {
   },
   methods: {
     ...mapActions(noticeStore, ["getNotice", "removeNotice"]),
-    remove() {
+    async remove() {
       if (confirm("정말 삭제하시겠습니까?")) {
-        this.removeQnA(this.question.no);
+        const status = await this.removeNotice(this.notice.no);
+        console.log(status);
+        if (status === 200) {
+          this.$router.push("/notice/list");
+        }
       }
     },
   },

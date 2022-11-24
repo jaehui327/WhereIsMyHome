@@ -66,15 +66,18 @@ const questionStore = {
     },
 
     async removeNotice({ commit }, noticeNo) {
+      let status;
       await doRemoveNotice(
         noticeNo,
         ({ data }) => {
           commit("SET_NOTICE_LIST", data);
+          status = 200;
         },
         (error) => {
           console.log(error);
         }
       );
+      return status;
     },
   },
 };
