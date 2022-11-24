@@ -34,13 +34,18 @@
               img-width="1024"
               img-height="480"
             >
-              <b-carousel-slide
-                img-blank
-                img-alt="Blank image"
-                v-for="(news, index) in newsList"
-                :key="index"
-              >
-                <p>{{ news.title | filter }}</p>
+              <b-carousel-slide v-for="(news, index) in newsList" :key="index">
+                <template #img>
+                  <div class="text-center" style="height: 60px">
+                    <h4>{{ news.title | filter }}</h4>
+                  </div>
+                  <img
+                    class="d-block img-fluid w-100"
+                    style="width: 240px; height: 180px"
+                    :src="images[index] ? images[index].imgSrc : ''"
+                    alt="image slot"
+                  />
+                </template>
               </b-carousel-slide>
             </b-carousel>
           </div>
@@ -83,6 +88,7 @@ export default {
     return {
       slide: 0,
       sliding: null,
+      images: [],
     };
   },
   filters: {
@@ -94,7 +100,6 @@ export default {
         .replaceAll("&apos;", "");
     },
   },
-
   computed: {
     ...mapGetters(newsStore, ["newsList"]),
     ...mapGetters(questionStore, ["questionList"]),
@@ -124,6 +129,11 @@ export default {
       key: null,
       word: null,
     });
+    for (let i = 0; i < 10; i++) {
+      this.images.push({
+        imgSrc: require(`@/assets/news/${Math.floor(Math.random() * 10) + 1}.png`),
+      });
+    }
   },
 };
 </script>
