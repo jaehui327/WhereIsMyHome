@@ -121,7 +121,7 @@ export default {
       await this.getAptList({ lat1, lng1, lat2, lng2, level });
 
       if (level < 5) {
-        const imgSrc = require("@/assets/apt.png");
+        const imgSrc = require("@/assets/marker/apt.png");
         this.aptList.map((apt) => {
           const aptInfo = document.createElement("div");
           aptInfo.className = "text-center marker";
@@ -234,28 +234,28 @@ export default {
       const code = places[0].category_group_code;
 
       if (code === "MT1") {
-        imgSrc = require("@/assets/mart.png");
+        imgSrc = require("@/assets/marker/mart.png");
         bgColor = "#f2b712";
       } else if (code === "PS3") {
-        imgSrc = require("@/assets/kindergarden.png");
+        imgSrc = require("@/assets/marker/kindergarden.png");
         bgColor = "#f95904";
       } else if (code === "SC4") {
-        imgSrc = require("@/assets/school.png");
+        imgSrc = require("@/assets/marker/school.png");
         bgColor = "#209414";
       } else if (code === "SW8") {
-        imgSrc = require("@/assets/subway.png");
+        imgSrc = require("@/assets/marker/subway.png");
         bgColor = "#ce1f0a";
       } else if (code === "FD6") {
-        imgSrc = require("@/assets/restaurant.png");
+        imgSrc = require("@/assets/marker/restaurant.png");
         bgColor = "#4cd4b7";
       } else if (code === "CE7") {
-        imgSrc = require("@/assets/cafe.png");
+        imgSrc = require("@/assets/marker/cafe.png");
         bgColor = "#624429";
       } else if (code === "HP8") {
-        imgSrc = require("@/assets/hospital.png");
+        imgSrc = require("@/assets/marker/hospital.png");
         bgColor = "#60c1f3";
       } else if (code === "PM9") {
-        imgSrc = require("@/assets/pharmacy.png");
+        imgSrc = require("@/assets/marker/pharmacy.png");
         bgColor = "#e5748d";
       }
       places.map((place) => {
