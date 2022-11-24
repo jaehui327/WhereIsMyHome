@@ -1,4 +1,4 @@
-import { login, doRegisterUser } from "@/api/user";
+import { login, doRegisterUser, removeUser, modifyUser } from "@/api/user";
 import router from "@/router";
 
 const userStore = {
@@ -46,6 +46,9 @@ const userStore = {
             commit("SET_USER_INFO", {
               id: data.id,
               role: data.role,
+              name: data.name,
+              tel: data.tel,
+              address: data.address,
             });
           }
           status = data.message;
@@ -76,6 +79,38 @@ const userStore = {
         }
       );
       return status;
+    },
+    async removeUser({ commit }, userId) {
+      await removeUser(
+        userId,
+        () => {
+          commit("SET_IS_LOGIN", false);
+          commit("SET_USER_INFO", null);
+          if (router.currentRoute.path !== "/") {
+            router.push("/");
+          }
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+    async modifyUser({ commit }, user) {
+      await modifyUser(
+        user,
+        ({ data }) => {
+          commit("SET_USER_INFO", {
+            id: data.id,
+            role: data.role,
+            name: data.name,
+            tel: data.phone,
+            address: data.address,
+          });
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     },
   },
 };

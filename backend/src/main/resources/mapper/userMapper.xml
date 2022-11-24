@@ -29,14 +29,12 @@
 		select user_id, user_pw, user_name, address, phone, `role` from users where user_id=#{id}
 	</select>
 	
-	<update id="modify" parameterType="UserDto">
+	<update id="modify" parameterType="map">
 		update users 
 		<trim prefix="set" suffixOverrides=",">
-			<if test="pw != null">user_pw = #{pw},</if>
 			<if test="name!= null">user_name = #{name},</if>
 			<if test="address != null">address = #{address},</if>
-			<if test="phone != null">phone = #{phone},</if>
-			<if test="role != null">role = #{role},</if>
+			<if test="tel != null">phone = #{tel},</if>
 		</trim>
 		where user_id=#{id}
 	</update>

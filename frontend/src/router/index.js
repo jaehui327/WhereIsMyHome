@@ -83,6 +83,11 @@ const routes = [
         name: "userregister",
         component: () => import("@/components/user/UserRegister"),
       },
+      {
+        path: "info",
+        name: "userinfo",
+        component: () => import("@/components/user/UserInfo"),
+      },
     ],
   },
   {

@@ -103,6 +103,9 @@ public class UserRestConroller {
 				resultMap.put("role", user.getRole());
 				resultMap.put("message", SUCCESS);
 				resultMap.put("id", user.getId());
+				resultMap.put("tel", user.getPhone());
+				resultMap.put("address", user.getAddress());
+				resultMap.put("name", user.getName());
 				status = HttpStatus.ACCEPTED;
 			} else {
 				resultMap.put("message", FAIL);
@@ -117,12 +120,11 @@ public class UserRestConroller {
 	}
 
 	// 회원정보 수정
-	@PutMapping("/{id}")
-	private ResponseEntity<?> update(@PathVariable String id, @ModelAttribute UserDto user) {
+	@PutMapping()
+	private ResponseEntity<?> update(@RequestBody Map<String, Object> map) {
 		try {
-			user.setPw(SHA256.encodeSha256(user.getPw()));
-			userService.modify(user);
-			UserDto u = userService.getUser(user.getId());
+			userService.modify(map);
+			UserDto u = userService.getUser((String) map.get("id"));
 			return new ResponseEntity<UserDto>(u, HttpStatus.OK);
 		} catch (Exception e) {
 			return exceptionHandling(e);

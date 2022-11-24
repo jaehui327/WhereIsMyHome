@@ -19,4 +19,12 @@ async function doRegisterUser(user, success, fail) {
   await api.post(`/user/join`, user).then(success).catch(fail);
 }
 
-export { login, tokenRegeneration, logout, doRegisterUser };
+async function removeUser(userId, success, fail) {
+  await api.delete(`/user/${userId}`).then(success).catch(fail);
+}
+
+async function modifyUser(user, success, fail) {
+  await api.put(`/user`, user).then(success).catch(fail);
+}
+
+export { login, tokenRegeneration, logout, doRegisterUser, removeUser, modifyUser };
