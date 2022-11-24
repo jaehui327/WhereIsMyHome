@@ -42,8 +42,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void modify(UserDto user) throws SQLException {
-		mapper.modify(user);
+	public void modify(Map<String, Object> map) throws SQLException {
+		mapper.modify(map);
 	}
 
 	@Override

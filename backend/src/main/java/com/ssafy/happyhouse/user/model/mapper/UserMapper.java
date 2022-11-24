@@ -12,7 +12,7 @@ public interface UserMapper {
 	UserDto loginUser(Map<String, Object> map) throws SQLException; // 로그인
 	
 	UserDto getUser(String id) throws SQLException;
-	void modify(UserDto user) throws SQLException; // 회원정보 수정
+	void modify(Map<String, Object> map) throws SQLException; // 회원정보 수정
 	void delete(String id) throws SQLException; // 회원 탈퇴
 	
 	public void saveRefreshToken(Map<String, String> map) throws SQLException;

@@ -12,11 +12,13 @@
       </b-navbar-nav>
 
       <b-navbar-nav class="ml-auto" v-if="isLogin">
-        <b-button variant="outline-dark" @click="logout">Logout</b-button> &nbsp;
-        <b-button to="/userinfo" variant="outline-dark">My Page</b-button>
+        <b-button variant="outline-dark" @click="logout">Logout</b-button>
+        &nbsp;
+        <b-button to="/user/info" variant="outline-dark">My Page</b-button>
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto" v-else>
-        <b-button to="/user/login" variant="outline-dark">Login</b-button> &nbsp;
+        <b-button to="/user/login" variant="outline-dark">Login</b-button>
+        &nbsp;
         <b-button to="/user/register" variant="outline-dark">Register</b-button>
       </b-navbar-nav>
     </b-collapse>
