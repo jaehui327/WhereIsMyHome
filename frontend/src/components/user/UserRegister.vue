@@ -7,9 +7,12 @@
           <div class="col-sm-3 m-auto">ID</div>
           <b-form-input class="col-sm-8" v-model="id" />
         </b-row>
+        <b-row class="textcenter justify-content-center p-1" v-if="duplicatedId">
+          중복된 아이디입니다.
+        </b-row>
         <b-row class="text-center justify-content-center p-1">
           <div class="col-sm-3 m-auto">Password</div>
-          <b-form-input id="type-password" class="col-sm-8" v-model="pw" />
+          <b-form-input id="type-password" type="password" class="col-sm-8" v-model="pw" />
         </b-row>
         <b-row class="text-center justify-content-center p-1">
           <div class="col-sm-3 m-auto">Name</div>
@@ -50,10 +53,22 @@ export default {
       address: "",
       tel: "",
       role: "user",
+      duplicatedId: false,
     };
   },
+  watch: {
+    id: "idChk",
+  },
   methods: {
-    ...mapActions(userStore, ["registerUser"]),
+    ...mapActions(userStore, ["registerUser", "idCheck"]),
+    async idChk() {
+      let test = await this.idCheck(this.id);
+      if (test > 0) {
+        this.duplicatedId = true;
+      } else {
+        this.duplicatedId = false;
+      }
+    },
     checkValue() {
       const regex = /^[a-z|A-Z|0-9|]+$/;
       const regexTel = /^[0-9]+$/;
@@ -73,6 +88,8 @@ export default {
         alert("주소를 입력해주세요.");
       } else if (!this.tel || !regexTel.test(this.tel)) {
         alert("전화번호를 확인해주세요.");
+      } else if (this.duplicatedId) {
+        alert("중복된 아이디입니다.");
       } else {
         this.register();
       }

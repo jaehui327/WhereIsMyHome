@@ -27,4 +27,8 @@ async function modifyUser(user, success, fail) {
   await api.put(`/user`, user).then(success).catch(fail);
 }
 
-export { login, tokenRegeneration, logout, doRegisterUser, removeUser, modifyUser };
+async function doIdCheck(userId, success, fail) {
+  await api.get(`/user/join/idcheck/${userId}`).then(success).catch(fail);
+}
+
+export { login, tokenRegeneration, logout, doRegisterUser, removeUser, modifyUser, doIdCheck };
