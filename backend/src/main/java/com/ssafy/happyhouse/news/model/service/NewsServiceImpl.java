@@ -38,7 +38,7 @@ public class NewsServiceImpl implements NewsService {
 		// TODO Auto-generated method stub
 		String clientId = configUtil.getProperty("naver.api.id");
 		String clientSecret = configUtil.getProperty("naver.api.secret");
-		String keyword = URLEncoder.encode("부동산", "UTF-8");
+		String keyword = URLEncoder.encode("경제 부동산", "UTF-8");
 
 		String apiURL = "https://openapi.naver.com/v1/search/news?query=" + keyword; // JSON 결과
 		Map<String, String> requestHeaders = new HashMap<>();

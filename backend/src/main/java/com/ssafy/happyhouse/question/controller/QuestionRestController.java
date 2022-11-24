@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.happyhouse.question.model.QuestionDto;
-import com.ssafy.happyhouse.question.model.SearchDto;
 import com.ssafy.happyhouse.question.model.service.QuestionService;
+import com.ssafy.happyhouse.util.SearchDto;
 
 import io.swagger.annotations.Api;
 

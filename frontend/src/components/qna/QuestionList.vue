@@ -10,9 +10,7 @@
       <div>
         <b-input-group style="width: 400px">
           <template #append>
-            <b-button variant="secondary" @click="test"
-              ><b-icon icon="search"></b-icon
-            ></b-button>
+            <b-button variant="secondary" @click="test"><b-icon icon="search"></b-icon></b-button>
           </template>
           <b-form-input
             id="type-search"
@@ -21,34 +19,23 @@
           ></b-form-input>
         </b-input-group>
       </div>
-      <b-button variant="primary" to="/qna/edit/" class="ml-auto"
-        >질문하기</b-button
-      >
+      <b-button variant="primary" to="/qna/edit/" class="ml-auto">질문하기</b-button>
     </b-row>
     <b-table-simple hover striped responsive class="text-center">
       <b-thead head-variant="dark">
         <b-tr>
-          <b-th>번호</b-th>
+          <b-th width="10%">번호</b-th>
           <b-th>제목</b-th>
-          <b-th>작성자</b-th>
-          <b-th>날짜</b-th>
-          <b-th>조회수</b-th>
+          <b-th width="20%">작성자</b-th>
+          <b-th width="20%">날짜</b-th>
+          <b-th width="10%">조회수</b-th>
         </b-tr>
       </b-thead>
       <b-tbody>
-        <question-list-item
-          v-for="question in questionList"
-          :key="question.no"
-          v-bind="question"
-        />
+        <question-list-item v-for="question in questionList" :key="question.no" v-bind="question" />
       </b-tbody>
     </b-table-simple>
-    <b-pagination
-      v-model="pg"
-      :total-rows="totalCnt"
-      :per-page="spp"
-      align="center"
-    ></b-pagination>
+    <b-pagination v-model="pg" :total-rows="totalCnt" :per-page="spp" align="center"></b-pagination>
   </section>
 </template>
 

@@ -45,6 +45,7 @@ const userStore = {
             commit("SET_IS_LOGIN_ERROR", false);
             commit("SET_USER_INFO", {
               id: data.id,
+              role: data.role,
             });
           }
           status = data.message;

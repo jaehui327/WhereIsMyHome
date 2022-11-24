@@ -6,11 +6,13 @@
           <div class="m-2">
             <h3>공지사항</h3>
             <b-list-group>
-              <b-list-group-item>sdf</b-list-group-item>
-              <b-list-group-item>sdf</b-list-group-item>
-              <b-list-group-item>sdf</b-list-group-item>
-              <b-list-group-item>sdf</b-list-group-item>
-              <b-list-group-item>sdf</b-list-group-item>
+              <b-list-group-item
+                v-for="notice in noticeList"
+                :key="notice.no"
+                :to="'/notice/view/' + notice.no"
+              >
+                {{ notice.title }}
+              </b-list-group-item>
             </b-list-group>
           </div>
           <hr />
@@ -61,6 +63,7 @@ import { mapGetters, mapActions } from "vuex";
 
 const newsStore = "newsStore";
 const questionStore = "questionStore";
+const noticeStore = "noticeStore";
 
 export default {
   name: "HomeView",
@@ -83,10 +86,12 @@ export default {
   computed: {
     ...mapGetters(newsStore, ["newsList"]),
     ...mapGetters(questionStore, ["questionList"]),
+    ...mapGetters(noticeStore, ["noticeList"]),
   },
   methods: {
     ...mapActions(newsStore, ["crawlNewsList"]),
     ...mapActions(questionStore, ["getQuestionList"]),
+    ...mapActions(noticeStore, ["getNoticeList"]),
     openInNewTab() {
       console.log(this.newsList[this.slide]);
       const tab = window.open(this.newsList[this.slide].link, "_blank");
@@ -98,6 +103,12 @@ export default {
     this.getQuestionList({
       pg: 1,
       spp: 10,
+      key: null,
+      word: null,
+    });
+    this.getNoticeList({
+      pg: 1,
+      spp: 5,
       key: null,
       word: null,
     });

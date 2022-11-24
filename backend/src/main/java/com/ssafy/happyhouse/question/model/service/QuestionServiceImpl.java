@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.happyhouse.question.model.QuestionDto;
-import com.ssafy.happyhouse.question.model.SearchDto;
 import com.ssafy.happyhouse.question.model.mapper.QuestionMapper;
+import com.ssafy.happyhouse.util.SearchDto;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {

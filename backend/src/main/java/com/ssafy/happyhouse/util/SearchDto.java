@@ -1,4 +1,4 @@
-package com.ssafy.happyhouse.question.model;
+package com.ssafy.happyhouse.util;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

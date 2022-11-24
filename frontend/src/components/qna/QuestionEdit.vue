@@ -15,11 +15,11 @@
       </b-tbody>
     </b-table-simple>
     <b-row class="justify-content-center" v-if="this.$route.params.no === undefined">
-      <b-button class="col-md-2">취소</b-button> &nbsp;
+      <b-button class="col-md-2" to="/qna/list">취소</b-button> &nbsp;
       <b-button class="col-md-2" variant="primary" @click="write">글 작성</b-button>
     </b-row>
     <b-row class="justify-content-center" v-else>
-      <b-button class="col-md-2">취소</b-button> &nbsp;
+      <b-button class="col-md-2" to="/qna/list">취소</b-button> &nbsp;
       <b-button class="col-md-2" variant="primary" @click="modify">글 수정</b-button>
     </b-row>
   </section>

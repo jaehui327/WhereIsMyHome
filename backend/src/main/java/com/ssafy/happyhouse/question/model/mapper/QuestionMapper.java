@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ssafy.happyhouse.question.model.QuestionDto;
-import com.ssafy.happyhouse.question.model.SearchDto;
+import com.ssafy.happyhouse.util.SearchDto;
 
 public interface QuestionMapper {
 

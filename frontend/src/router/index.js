@@ -24,9 +24,14 @@ const routes = [
         component: () => import("@/components/notice/NoticeList"),
       },
       {
-        path: "write",
-        name: "noticewrite",
-        component: () => import("@/components/notice/NoticeWrite"),
+        path: "view/:no",
+        name: "noticedetail",
+        component: () => import("@/components/notice/NoticeDetail"),
+      },
+      {
+        path: "edit",
+        name: "noticeedit",
+        component: () => import("@/components/notice/NoticeEdit"),
       },
       {
         path: "update",

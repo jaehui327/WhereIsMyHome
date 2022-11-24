@@ -100,6 +100,7 @@ public class UserRestConroller {
 				RTCookie.setMaxAge(60 * 60 * 24 * 7 * 2);
 				response.addCookie(RTCookie);
 				
+				resultMap.put("role", user.getRole());
 				resultMap.put("message", SUCCESS);
 				resultMap.put("id", user.getId());
 				status = HttpStatus.ACCEPTED;
