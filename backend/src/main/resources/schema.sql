@@ -113,7 +113,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `happyhouse`.`notices` (
   `notice_no` INT NOT NULL AUTO_INCREMENT,
-  `subject` VARCHAR(100) NOT NULL,
+  `title` VARCHAR(100) NOT NULL,
   `admin_id` VARCHAR(20) NOT NULL,
   `content` VARCHAR(2000) NOT NULL,
   `hit` INT NOT NULL DEFAULT '0',
